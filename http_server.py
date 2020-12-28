@@ -294,4 +294,5 @@ def main(argv):
 
 
 if __name__ == "__main__":
+	print("\n\n\n!!!!!!WARNING -FileNotFoundError?? you need to run generate_cert.sh to create ssl certs / stylegan-web.crt and update /etc/hosts - 127.0.0.1 example.com (no www) !!!!")
 	main(sys.argv)
