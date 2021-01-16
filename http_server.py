@@ -33,6 +33,17 @@ g_Projector = None
 g_Session = None
 g_LoadingMutex = Lock()
 
+def get_files_with_ext(path, extensions):
+    files = os.listdir(path)
+    files = [os.path.join(path,f) for f in files]
+    files = [f for f in files if os.path.isfile(f)]
+    files = [f for f in files if f.endswith(tuple(extensions))]
+    return files
+	
+def get_latent_vector_files():
+    files = get_files_with_ext('latent_directions', '.npy')
+    # latent_vectors = [np.load(f) for f in files]
+    return files
 
 def loadGs():
 	with g_LoadingMutex:
@@ -148,16 +159,18 @@ for path in pageRouters:
 	app.route(path, endpoint = 'handler' + path)(getHandler(pageRouters[path]))
 
 
+
 @app.route('/spec', methods=['GET'])
 def spec():
 	global model_name
 	model, _ = loadGs()
-
+	latent_directions = get_latent_vector_files()
 	return dict(
 		model = model_name,
 		latents_dimensions = model.input_shape[1],
 		image_shape = model.output_shape,
-		synthesis_input_shape = model.components.synthesis.input_shape)
+		synthesis_input_shape = model.components.synthesis.input_shape,
+		latent_directions = latent_directions)
 
 
 @app.route('/map-z-w', methods=['GET'])

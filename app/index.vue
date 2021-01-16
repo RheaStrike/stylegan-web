@@ -74,12 +74,19 @@
 					</span>
 				</span>
 			</p>
+			<ol v-if="shownLatentDirections">
+			<li v-for="(direction, index) of shownLatentDirections" :key="index">
+					<input type="range" class="feature-bar" v-model.lazy="direction.normalized" :min="-0.99999999" :max="0.99999999" step="any" />
+					<input class="value" type="number" v-model.number="direction.value" step="0.001" />
+			</li>
+			</ol>
 			<ol v-if="shownFeatures">
 				<li v-for="(feature, index) of shownFeatures" :key="index">
 					<input type="range" class="feature-bar" v-model.lazy="feature.normalized" :min="-0.99999999" :max="0.99999999" step="any" />
 					<input class="value" type="number" v-model.number="feature.value" step="0.001" />
 				</li>
 			</ol>
+
 		</aside>
 		<article :class="{loading}">
 			<img v-if="latentsBytes" class="result note-box" :class="{activated: copyActivated}" :src="imageURL" @load="loading = false" />
@@ -149,6 +156,7 @@
 			return {
 				spec: null,
 				latents_dimensions: null,
+				latents_directions: null,
 				latentsLayers: 0,
 				features: null,
 				featuresEx: null,
@@ -253,6 +261,9 @@
 				},
 			},
 
+			shownLatentDirections () {
+				return this.latentDirectionEx.slice(this.shownLayer * this.latents_directions, (this.shownLayer + 1) * this.latents_directions);
+			}
 
 			shownFeatures () {
 				if (!this.useXLatents)
@@ -349,7 +360,14 @@
 			console.log("model spec:", this.spec);
 
 			this.latents_dimensions = this.spec.latents_dimensions;
+			this.latents_directions = this.spec.latents_directions;
+	
+
 			this.latentsLayers = this.spec.synthesis_input_shape[1];
+			// this should be the count of latent directions
+			this.latentDirection = Array(this.spec.latents_directions).fill().map(() => new Feature(0));
+			this.latentDirectionEx = Array(this.spec.latents_directions * this.spec.latents_directions.count).fill().map(() => new Feature(0));
+
 
 			this.initializing = false;
 
