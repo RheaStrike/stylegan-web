@@ -1,0 +1,41 @@
+{
+    "image_shape": [
+        null,
+        3,
+        1024,
+        1024
+    ],
+    "latent_directions": [
+        "latent_directions/emotion_angry.npy",
+        "latent_directions/angle_vertical.npy",
+        "latent_directions/emotion_fear.npy",
+        "latent_directions/exposure.npy",
+        "latent_directions/eyes_open.npy",
+        "latent_directions/beauty.npy",
+        "latent_directions/glasses.npy",
+        "latent_directions/face_shape.npy",
+        "latent_directions/race_yellow.npy",
+        "latent_directions/smile.npy",
+        "latent_directions/emotion_surprise.npy",
+        "latent_directions/race_black.npy",
+        "latent_directions/stylegan2directions.zip",
+        "latent_directions/angle_horizontal.npy",
+        "latent_directions/gender.npy",
+        "latent_directions/emotion_happy.npy",
+        "latent_directions/race_white.npy",
+        "latent_directions/width.npy",
+        "latent_directions/emotion_disgust.npy",
+        "latent_directions/camera_rotation.npy",
+        "latent_directions/age.npy",
+        "latent_directions/height.npy",
+        "latent_directions/emotion_sad.npy",
+        "latent_directions/emotion_easy.npy"
+    ],
+    "latents_dimensions": 512,
+    "model": "cat",
+    "synthesis_input_shape": [
+        null,
+        18,
+        512
+    ]
+}
