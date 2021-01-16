@@ -2,10 +2,11 @@
 	<div @paste="onPaste" @copy.prevent="copyLatentCode">
 		<header>
 			<h2 v-if="spec" class="model" title="model name">Model Name:{{spec.model}}</h2>
-			<select v-model="selected">
+			<select v-model="selectedDirection" @change="onChange($event)">
 				<option disabled value="">Please select one</option>
 				<option v-for="direction in latent_directions" :value="direction">{{direction}}</option>
 			</select>
+			<p></p>
 			<fieldset>
 				<select v-model="fromW" class="latant-type" :title="`generate from ${fromW ? 'W' : 'Z'}`">
 					<option :value="false">Z</option>
@@ -154,7 +155,7 @@
 
 		data () {
 			return {
-				selected:'',
+				selectedDirection:'',
 				spec: null,
 				latents_dimensions: null,
 				latent_directions: null,
@@ -380,6 +381,8 @@
 
 
 		methods: {
+
+			
 			randomizeFeatures() {
 				if (this.shownFeatures)
 					this.shownFeatures.forEach(f => f.randomize(Math.exp(this.randomIntensity)));
@@ -504,6 +507,14 @@
 				this.latentsBytes = await (await fetch(`/map-z-w?psi=${this.psi}&z=${encodeURIComponent(this.latentsBytes)}`)).text();
 				this.fromW = true;
 				this.extendFeature = false;
+			},
+ 			onChange(event) {
+           	 	console.log(event.target.value)
+				switchLatentDirections()
+       		},
+			async switchLatentDirections () {
+				test = await (await fetch(`/change?direction=${this.selectedDirection}`)).text();
+				console.log("test:",test)
 			},
 		},
 

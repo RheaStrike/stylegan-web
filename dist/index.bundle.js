@@ -8878,427 +8878,437 @@
 
 
 
-  function parseQueries (str) {
-  	return str.substr(1).split("&").reduce((dict, pair) => {
-  		const sections = pair.split("=");
-  		dict[sections[0]] = sections[1];
+  	function parseQueries (str) {
+  		return str.substr(1).split("&").reduce((dict, pair) => {
+  			const sections = pair.split("=");
+  			dict[sections[0]] = sections[1];
 
-  		return dict;
-  	}, {});
-  }
-
-
-  let featureNormalFactor = 0.6;
-
-
-  class Feature {
-  	constructor (value) {
-  		this.value = value;
+  			return dict;
+  		}, {});
   	}
 
 
-  	get normalized () {
-  		return Math.tanh(this.value / featureNormalFactor);
+  	let featureNormalFactor = 0.6;
+
+
+  	class Feature {
+  		constructor (value) {
+  			this.value = value;
+  		}
+
+
+  		get normalized () {
+  			return Math.tanh(this.value / featureNormalFactor);
+  		}
+
+
+  		set normalized (v) {
+  			this.value = Math.atanh(v) * featureNormalFactor;
+  		}
+
+
+  		randomize (intensity) {
+  			this.value += randn_bm() * intensity;
+  		}
   	}
 
 
-  	set normalized (v) {
-  		this.value = Math.atanh(v) * featureNormalFactor;
-  	}
+  	var script$2 = {
+  		name: "index",
 
 
-  	randomize (intensity) {
-  		this.value += randn_bm() * intensity;
-  	}
-  }
-
-
-  var script$2 = {
-  	name: "index",
-
-
-  	components: {
-  		StoreInput,
-  		Navigator,
-  	},
-
-
-  	data () {
-  		return {
-  			selected:'',
-  			spec: null,
-  			latents_dimensions: null,
-  			latent_directions: null,
-  			latentsLayers: 0,
-  			features: null,
-  			featuresEx: null,
-  			psi: 0.5,
-  			initializing: false,
-  			loading: false,
-  			randomIntensity: -3,
-  			noise: true,
-  			fromW: false,
-  			hashLatents: null,
-  			slerpStep: 10,
-  			lerpFactor: 0.8,
-  			extendFeature: false,
-  			shownLayer: 0,
-  			copyActivated: false,
-  		};
-  	},
-
-
-  	computed: {
-  		useXLatents() {
-  			return this.fromW && this.extendFeature;
+  		components: {
+  			StoreInput,
+  			Navigator,
   		},
 
 
-  		latentsBytes: {
-  			get () {
+  		data () {
+  			return {
+  				selectedDirection:'',
+  				spec: null,
+  				latents_dimensions: null,
+  				latent_directions: null,
+  				latentsLayers: 0,
+  				features: null,
+  				featuresEx: null,
+  				psi: 0.5,
+  				initializing: false,
+  				loading: false,
+  				randomIntensity: -3,
+  				noise: true,
+  				fromW: false,
+  				hashLatents: null,
+  				slerpStep: 10,
+  				lerpFactor: 0.8,
+  				extendFeature: false,
+  				shownLayer: 0,
+  				copyActivated: false,
+  			};
+  		},
+
+
+  		computed: {
+  			useXLatents() {
+  				return this.fromW && this.extendFeature;
+  			},
+
+
+  			latentsBytes: {
+  				get () {
+  					if (!this.features)
+  						return null;
+
+  					return encodeFloat32(this.featureVector);
+  				},
+
+  				set (value) {
+  					const values = decodeFloat32(value);
+
+  					values.forEach((value, i) => {
+  						if (this.features && this.features[i])
+  							this.features[i].value = value;
+  					});
+  				},
+  			},
+
+
+  			latentsBytesEx: {
+  				get () {
+  					if (!this.featuresEx)
+  						return null;
+
+  					return encodeFixed16(this.featureVectorEx);
+  				},
+
+  				set (value) {
+  					const values = decodeFixed16(value);
+
+  					values.forEach((value, i) => {
+  						if (this.featuresEx && this.featuresEx[i])
+  							this.featuresEx[i].value = value;
+  					});
+  				},
+  			},
+
+
+  			latentsURL: {
+  				get () {
+  					if (!this.fromW)
+  						return `z:${this.psi},${this.latentsBytes}`;
+  					else if (!this.extendFeature)
+  						return `w:${this.latentsBytes}`;
+  					else
+  						return `w+:${this.latentsBytesEx}`;
+  				},
+
+  				set (value) {
+  					const [_, protocol, path] = value.match(/^([\w\+]+):(.+)$/);
+  					switch (protocol) {
+  					case "z":
+  						this.fromW = false;
+
+  						const [_, psi, bytes] = path.match(/^(.+),(.+)$/);
+  						this.psi = Number(this.psi);
+  						this.latentsBytes = bytes;
+
+  						break;
+  					case "w":
+  						this.fromW = true;
+  						this.extendFeature = false;
+
+  						this.latentsBytes = path;
+
+  						break;
+  					case "w+":
+  						this.fromW = true;
+  						this.extendFeature = true;
+  						
+  						this.latentsBytesEx = path;
+
+  						break;
+  					default:
+  						console.warn("latent URL set failed, unexpected protocol:", protocol);
+  					}
+  				},
+  			},
+
+  			
+  			shownFeatures () {
+  				if (!this.useXLatents)
+  					return this.features;
+
+  				return this.featuresEx.slice(this.shownLayer * this.latents_dimensions, (this.shownLayer + 1) * this.latents_dimensions);
+  			},
+
+
+  			featuresInUse () {
+  				return this.useXLatents ? this.featuresEx : this.features;
+  			},
+
+
+  			featureVector () {
+  				const normalized = this.fromW ? 1 : 1 / this.safeFeatureMagnitude;
+  				return this.features.map(f => f.value * normalized);
+  			},
+
+
+  			featureVectorEx () {
+  				return this.featuresEx && this.featuresEx.map(f => f.value);
+  			},
+
+
+  			featureMagnitude() {
   				if (!this.features)
-  					return null;
+  					return 0;
 
-  				return encodeFloat32(this.featureVector);
+  				const result = Math.sqrt(this.features.reduce((sum, f) => sum + f.value * f.value, 0));
+
+  				return result;
   			},
 
-  			set (value) {
-  				const values = decodeFloat32(value);
 
-  				values.forEach((value, i) => {
-  					if (this.features && this.features[i])
-  						this.features[i].value = value;
-  				});
-  			},
-  		},
+  			safeFeatureMagnitude() {
+  				const EPSILON = 1e-9;
 
-
-  		latentsBytesEx: {
-  			get () {
-  				if (!this.featuresEx)
-  					return null;
-
-  				return encodeFixed16(this.featureVectorEx);
+  				return this.featureMagnitude || EPSILON;
   			},
 
-  			set (value) {
-  				const values = decodeFixed16(value);
 
-  				values.forEach((value, i) => {
-  					if (this.featuresEx && this.featuresEx[i])
-  						this.featuresEx[i].value = value;
-  				});
+  			featureMagnitudeEx() {
+  				if (!this.featureVectorEx)
+  					return 0;
+
+  				const result = Math.sqrt(this.featureVectorEx.reduce((sum, v) => sum + v * v, 0));
+
+  				return result;
   			},
-  		},
 
 
-  		latentsURL: {
-  			get () {
-  				if (!this.fromW)
-  					return `z:${this.psi},${this.latentsBytes}`;
-  				else if (!this.extendFeature)
-  					return `w:${this.latentsBytes}`;
+  			currentLatentsMagnitude () {
+  				return this.extendFeature ? this.featureMagnitudeEx / this.latentsLayers : this.featureMagnitude;
+  			},
+
+
+  			imageURL () {
+  				const latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;
+
+  				return `/generate?${this.fromW ? "fromW=1" : "psi=" + this.psi.toString()}${this.noise ? "&randomize_noise=1" : ""}&${latentStr}`;
+  			},
+
+
+  			tag () {
+  				const latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;
+
+  				return `#${this.fromW ? "fromW=1" : "psi=" + this.psi.toString()}&${latentStr}`;
+  			},
+
+
+  			latentDistance() {
+  				if (!this.hashLatents)
+  					return NaN;
+
+  				if (this.fromW)
+  					return distanceBetween(this.featureVector, this.hashLatents);
   				else
-  					return `w+:${this.latentsBytesEx}`;
+  					return angleBetween(this.featureVector, this.hashLatents);
   			},
 
-  			set (value) {
-  				const [_, protocol, path] = value.match(/^([\w\+]+):(.+)$/);
-  				switch (protocol) {
-  				case "z":
-  					this.fromW = false;
+  			asideScales() {
+  				return this.fromW ? [-10, 0, 10] : [-1, 0, 1];
+  			},
+  		},
 
-  					const [_, psi, bytes] = path.match(/^(.+),(.+)$/);
-  					this.psi = Number(this.psi);
-  					this.latentsBytes = bytes;
 
-  					break;
-  				case "w":
-  					this.fromW = true;
-  					this.extendFeature = false;
+  		async mounted () {
+  			window.$main = this;
 
-  					this.latentsBytes = path;
+  			this.initializing = true;
+  			const res = await fetch("/spec");
+  			this.spec = await res.json();
+  			console.log("model spec:", this.spec);
 
-  					break;
-  				case "w+":
-  					this.fromW = true;
+  			this.latents_dimensions = this.spec.latents_dimensions;
+  			this.latent_directions = this.spec.latent_directions;
+  			// console.log("this.latent_directions:",this.latent_directions)
+
+  			this.latentsLayers = this.spec.synthesis_input_shape[1];
+  			// this should be the count of latent directions
+  			// this.latentDirection = Array(this.spec.latent_directions).fill().map(() => new Feature(0));
+  			// this.latentDirectionEx = Array(this.spec.latent_directions * this.spec.latent_directions.count).fill().map(() => new Feature(0));
+
+
+  			this.initializing = false;
+
+  			this.features = Array(this.spec.latents_dimensions).fill().map(() => new Feature(0));
+  			this.featuresEx = Array(this.spec.latents_dimensions * this.latentsLayers).fill().map(() => new Feature(0));
+
+  			window.onhashchange = () => this.loadHash();
+
+  			if (location.hash)
+  				this.loadHash();
+  		},
+
+
+  		methods: {
+
+  			
+  			randomizeFeatures() {
+  				if (this.shownFeatures)
+  					this.shownFeatures.forEach(f => f.randomize(Math.exp(this.randomIntensity)));
+  			},
+
+
+  			zeroFeatures() {
+  				if (this.featuresInUse)
+  					this.featuresInUse.forEach(f => f.value = 0);
+  			},
+
+
+  			loadHash () {
+  				const dict = parseQueries(location.hash);
+  				//console.log("dict:", dict);
+
+  				const psi = Number(dict.psi);
+  				if (Number.isFinite(psi))
+  					this.psi = psi;
+
+  				if (dict.xlatents) {
+  					this.latentsBytesEx = dict.xlatents;
   					this.extendFeature = true;
-  					
-  					this.latentsBytesEx = path;
+  				}
+  				else if (dict.latents) {
+  					this.latentsBytes = dict.latents;
+  					this.extendFeature = false;
+  				}
 
-  					break;
-  				default:
-  					console.warn("latent URL set failed, unexpected protocol:", protocol);
+  				this.fromW = dict.fromW ? true : false;
+
+  				this.updateHashLatents();
+  			},
+
+
+  			normalizeFeatures () {
+  				this.features.forEach(f => f.value /= this.safeFeatureMagnitude);
+  			},
+
+
+  			rotateFeatures (target, theta) {
+  				console.assert(target.length === this.features.length);
+
+  				this.normalizeFeatures();
+
+  				const dot = Math.min(1, Math.max(-1, target.reduce((sum, t, i) => sum + t * this.features[i].value, 0)));
+  				//console.assert(Math.abs(dot) <= 1, "unexpect dot:", dot, target);
+
+  				const sinOmega = Math.sqrt(1 - dot * dot);
+  				const sinTheta = Math.sin(theta);
+  				if (sinOmega < sinTheta) {
+  					this.features.forEach((f, i) => f.value = target[i]);
+  					return;
+  				}
+
+  				const side = target.map((t, i) => t - this.features[i].value * dot);
+  				const relative = side.map(v => v * sinTheta / sinOmega);
+
+  				const cosTheta = Math.cos(theta);
+  				this.features.forEach((f, i) => f.value = f.value * cosTheta + relative[i]);
+  			},
+
+
+  			slerpToHash () {
+  				const targetLatents = parseQueries(location.hash).latents;
+  				if (targetLatents) {
+  					this.rotateFeatures(this.hashLatents, this.slerpStep * Math.PI / 180);
   				}
   			},
-  		},
-
-  		
-  		shownFeatures () {
-  			if (!this.useXLatents)
-  				return this.features;
-
-  			return this.featuresEx.slice(this.shownLayer * this.latents_dimensions, (this.shownLayer + 1) * this.latents_dimensions);
-  		},
 
 
-  		featuresInUse () {
-  			return this.useXLatents ? this.featuresEx : this.features;
-  		},
+  			lerpToHash () {
+  				this.features.forEach((f, i) => f.value = f.value * this.lerpFactor + this.hashLatents[i] * (1 - this.lerpFactor));
+  			},
 
 
-  		featureVector () {
-  			const normalized = this.fromW ? 1 : 1 / this.safeFeatureMagnitude;
-  			return this.features.map(f => f.value * normalized);
-  		},
+  			updateHashLatents() {
+  				if (this.latentsBytes) {
+  					const lvec = decodeFloat32(this.latentsBytes);
+  					this.hashLatents = this.fromW ? lvec : normalize$1(lvec);
+  				}
+  				else
+  					this.hashLatents = null;
+  			},
 
 
-  		featureVectorEx () {
-  			return this.featuresEx && this.featuresEx.map(f => f.value);
-  		},
+  			copyLatentCode() {
+  				navigator.clipboard.writeText(this.latentsURL);
+  				console.log("Latent code copied into clipboard.");
+
+  				this.copyActivated = true;
+  				setTimeout(() => this.copyActivated = false, 100);
+  			},
 
 
-  		featureMagnitude() {
-  			if (!this.features)
-  				return 0;
+  			async onPaste(event) {
+  				//console.log("onPaste:", [...event.clipboardData.items]);
+  				const text = await new Promise(resolve => [...event.clipboardData.items][0].getAsString(resolve));
+  				//console.log("text:", text);
+  				try {
+  					// check if text is valid latent code
+  					/*const origin = atob(text);
+  					if (origin.length !== this.latents_dimensions * 4)
+  						throw new Error("invalid latent code");*/
+  					if (!/^[\w+]+:.+$/.test(text))
+  						throw new Error("invalid latent code");
 
-  			const result = Math.sqrt(this.features.reduce((sum, f) => sum + f.value * f.value, 0));
-
-  			return result;
-  		},
-
-
-  		safeFeatureMagnitude() {
-  			const EPSILON = 1e-9;
-
-  			return this.featureMagnitude || EPSILON;
-  		},
-
-
-  		featureMagnitudeEx() {
-  			if (!this.featureVectorEx)
-  				return 0;
-
-  			const result = Math.sqrt(this.featureVectorEx.reduce((sum, v) => sum + v * v, 0));
-
-  			return result;
-  		},
+  					this.latentsURL = text;
+  				}
+  				catch (error) {
+  					console.warn("latent code paste failed:", error);
+  				}
+  			},
 
 
-  		currentLatentsMagnitude () {
-  			return this.extendFeature ? this.featureMagnitudeEx / this.latentsLayers : this.featureMagnitude;
-  		},
+  			featureNormalFactor() {
+  				return featureNormalFactor;
+  			},
 
 
-  		imageURL () {
-  			const latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;
-
-  			return `/generate?${this.fromW ? "fromW=1" : "psi=" + this.psi.toString()}${this.noise ? "&randomize_noise=1" : ""}&${latentStr}`;
-  		},
-
-
-  		tag () {
-  			const latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;
-
-  			return `#${this.fromW ? "fromW=1" : "psi=" + this.psi.toString()}&${latentStr}`;
-  		},
-
-
-  		latentDistance() {
-  			if (!this.hashLatents)
-  				return NaN;
-
-  			if (this.fromW)
-  				return distanceBetween(this.featureVector, this.hashLatents);
-  			else
-  				return angleBetween(this.featureVector, this.hashLatents);
-  		},
-
-  		asideScales() {
-  			return this.fromW ? [-10, 0, 10] : [-1, 0, 1];
-  		},
-  	},
-
-
-  	async mounted () {
-  		window.$main = this;
-
-  		this.initializing = true;
-  		const res = await fetch("/spec");
-  		this.spec = await res.json();
-  		console.log("model spec:", this.spec);
-
-  		this.latents_dimensions = this.spec.latents_dimensions;
-  		this.latent_directions = this.spec.latent_directions;
-  		// console.log("this.latent_directions:",this.latent_directions)
-
-  		this.latentsLayers = this.spec.synthesis_input_shape[1];
-  		// this should be the count of latent directions
-  		// this.latentDirection = Array(this.spec.latent_directions).fill().map(() => new Feature(0));
-  		// this.latentDirectionEx = Array(this.spec.latent_directions * this.spec.latent_directions.count).fill().map(() => new Feature(0));
-
-
-  		this.initializing = false;
-
-  		this.features = Array(this.spec.latents_dimensions).fill().map(() => new Feature(0));
-  		this.featuresEx = Array(this.spec.latents_dimensions * this.latentsLayers).fill().map(() => new Feature(0));
-
-  		window.onhashchange = () => this.loadHash();
-
-  		if (location.hash)
-  			this.loadHash();
-  	},
-
-
-  	methods: {
-  		randomizeFeatures() {
-  			if (this.shownFeatures)
-  				this.shownFeatures.forEach(f => f.randomize(Math.exp(this.randomIntensity)));
-  		},
-
-
-  		zeroFeatures() {
-  			if (this.featuresInUse)
-  				this.featuresInUse.forEach(f => f.value = 0);
-  		},
-
-
-  		loadHash () {
-  			const dict = parseQueries(location.hash);
-  			//console.log("dict:", dict);
-
-  			const psi = Number(dict.psi);
-  			if (Number.isFinite(psi))
-  				this.psi = psi;
-
-  			if (dict.xlatents) {
-  				this.latentsBytesEx = dict.xlatents;
-  				this.extendFeature = true;
-  			}
-  			else if (dict.latents) {
-  				this.latentsBytes = dict.latents;
+  			async convertFromZToW () {
+  				this.latentsBytes = await (await fetch(`/map-z-w?psi=${this.psi}&z=${encodeURIComponent(this.latentsBytes)}`)).text();
+  				this.fromW = true;
   				this.extendFeature = false;
-  			}
-
-  			this.fromW = dict.fromW ? true : false;
-
-  			this.updateHashLatents();
+  			},
+   			onChange(event) {
+             	 	console.log(event.target.value);
+  				switchLatentDirections();
+         		},
+  			async switchLatentDirections () {
+  				test = await (await fetch(`/change?direction=${this.selectedDirection}`)).text();
+  				console.log("test:",test);
+  			},
   		},
 
 
-  		normalizeFeatures () {
-  			this.features.forEach(f => f.value /= this.safeFeatureMagnitude);
+  		watch: {
+  			imageURL () {
+  				this.loading = true;
+  			},
+
+
+  			fromW (value) {
+  				featureNormalFactor = value ? 12 : 0.6;
+
+  				this.updateHashLatents();
+  			},
+
+
+  			/*extendFeature (value) {
+  				// set featuresEX value by tiling features' value
+  				if (value)
+  					this.featuresEx.forEach((feature, i) => feature.value = this.features[i % this.features.length].value);
+  			},*/
   		},
-
-
-  		rotateFeatures (target, theta) {
-  			console.assert(target.length === this.features.length);
-
-  			this.normalizeFeatures();
-
-  			const dot = Math.min(1, Math.max(-1, target.reduce((sum, t, i) => sum + t * this.features[i].value, 0)));
-  			//console.assert(Math.abs(dot) <= 1, "unexpect dot:", dot, target);
-
-  			const sinOmega = Math.sqrt(1 - dot * dot);
-  			const sinTheta = Math.sin(theta);
-  			if (sinOmega < sinTheta) {
-  				this.features.forEach((f, i) => f.value = target[i]);
-  				return;
-  			}
-
-  			const side = target.map((t, i) => t - this.features[i].value * dot);
-  			const relative = side.map(v => v * sinTheta / sinOmega);
-
-  			const cosTheta = Math.cos(theta);
-  			this.features.forEach((f, i) => f.value = f.value * cosTheta + relative[i]);
-  		},
-
-
-  		slerpToHash () {
-  			const targetLatents = parseQueries(location.hash).latents;
-  			if (targetLatents) {
-  				this.rotateFeatures(this.hashLatents, this.slerpStep * Math.PI / 180);
-  			}
-  		},
-
-
-  		lerpToHash () {
-  			this.features.forEach((f, i) => f.value = f.value * this.lerpFactor + this.hashLatents[i] * (1 - this.lerpFactor));
-  		},
-
-
-  		updateHashLatents() {
-  			if (this.latentsBytes) {
-  				const lvec = decodeFloat32(this.latentsBytes);
-  				this.hashLatents = this.fromW ? lvec : normalize$1(lvec);
-  			}
-  			else
-  				this.hashLatents = null;
-  		},
-
-
-  		copyLatentCode() {
-  			navigator.clipboard.writeText(this.latentsURL);
-  			console.log("Latent code copied into clipboard.");
-
-  			this.copyActivated = true;
-  			setTimeout(() => this.copyActivated = false, 100);
-  		},
-
-
-  		async onPaste(event) {
-  			//console.log("onPaste:", [...event.clipboardData.items]);
-  			const text = await new Promise(resolve => [...event.clipboardData.items][0].getAsString(resolve));
-  			//console.log("text:", text);
-  			try {
-  				// check if text is valid latent code
-  				/*const origin = atob(text);
-  				if (origin.length !== this.latents_dimensions * 4)
-  					throw new Error("invalid latent code");*/
-  				if (!/^[\w+]+:.+$/.test(text))
-  					throw new Error("invalid latent code");
-
-  				this.latentsURL = text;
-  			}
-  			catch (error) {
-  				console.warn("latent code paste failed:", error);
-  			}
-  		},
-
-
-  		featureNormalFactor() {
-  			return featureNormalFactor;
-  		},
-
-
-  		async convertFromZToW () {
-  			this.latentsBytes = await (await fetch(`/map-z-w?psi=${this.psi}&z=${encodeURIComponent(this.latentsBytes)}`)).text();
-  			this.fromW = true;
-  			this.extendFeature = false;
-  		},
-  	},
-
-
-  	watch: {
-  		imageURL () {
-  			this.loading = true;
-  		},
-
-
-  		fromW (value) {
-  			featureNormalFactor = value ? 12 : 0.6;
-
-  			this.updateHashLatents();
-  		},
-
-
-  		/*extendFeature (value) {
-  			// set featuresEX value by tiling features' value
-  			if (value)
-  				this.featuresEx.forEach((feature, i) => feature.value = this.features[i % this.features.length].value);
-  		},*/
-  	},
-  };
+  	};
 
   /* script */
   const __vue_script__$2 = script$2;
@@ -9334,24 +9344,29 @@
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.selected,
-                  expression: "selected"
+                  value: _vm.selectedDirection,
+                  expression: "selectedDirection"
                 }
               ],
               on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value;
-                      return val
-                    });
-                  _vm.selected = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0];
-                }
+                change: [
+                  function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value;
+                        return val
+                      });
+                    _vm.selectedDirection = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0];
+                  },
+                  function($event) {
+                    return _vm.onChange($event)
+                  }
+                ]
               }
             },
             [
@@ -9921,9 +9936,9 @@
     /* style */
     const __vue_inject_styles__$2 = function (inject) {
       if (!inject) return
-      inject("data-v-465e129a_0", { source: "\nhtml\n{\n\toverflow: hidden;\n\tfont-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}\nheader fieldset\n{\n\tdisplay: inline-block;\n\tmargin: 0 .6em;\n\tborder: 0;\n\tpadding: 0;\n}\n.initializing\n{\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\tbottom: 0;\n\tright: 0;\n\tfont-size: 10vh;\n\tpadding: 30vh 2em 0;\n\twhite-space: normal;\n\tbackground-color: #ccca;\n\tcolor: #444c;\n}\n.note-box\n{\n\ttransition: outline-color .6s ease-out;\n\toutline: 4px transparent solid;\n}\n.note-box.activated\n{\n\toutline-color: #0f6;\n\ttransition: outline-color .01s;\n}\nbutton.icon\n{\n\tbackground: transparent;\n\tborder: 0;\n\tcursor: pointer;\n}\nbutton.icon:hover\n{\n\ttransform: scale(1.1);\n}\n", map: undefined, media: undefined })
-  ,inject("data-v-465e129a_1", { source: "\nhtml\n{\n\toverflow: hidden;\n\tfont-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}\nheader fieldset\n{\n\tdisplay: inline-block;\n\tmargin: 0 .6em;\n\tborder: 0;\n\tpadding: 0;\n}\n.initializing\n{\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\tbottom: 0;\n\tright: 0;\n\tfont-size: 10vh;\n\tpadding: 30vh 2em 0;\n\twhite-space: normal;\n\tbackground-color: #ccca;\n\tcolor: #444c;\n}\n.note-box\n{\n\ttransition: outline-color .6s ease-out;\n\toutline: 4px transparent solid;\n}\n.note-box.activated\n{\n\toutline-color: #0f6;\n\ttransition: outline-color .01s;\n}\nbutton.icon\n{\n\tbackground: transparent;\n\tborder: 0;\n\tcursor: pointer;\n}\nbutton.icon:hover\n{\n\ttransform: scale(1.1);\n}\n", map: undefined, media: undefined })
-  ,inject("data-v-465e129a_2", { source: "\nbody\n{\n\twhite-space: nowrap;\n}\nheader\n{\n\theight: 2em;\n\tmargin: 20px 0;\n}\nheader h2\n{\n\tdisplay: inline;\n}\n.latant-type\n{\n\tborder: 0;\n\tfont-weight: bold;\n\t-webkit-appearance: none;\n\tcursor: pointer;\n}\n\n/*.latant-type:hover\n{\n\t-webkit-appearance: menulist;\n}*/\naside, article\n{\n\tdisplay: inline-block;\n\tvertical-align: top;\n\theight: calc(100vh - 72px);\n}\naside\n{\n\toverflow-y: auto;\n\tfont-size: 9px;\n}\naside > *\n{\n\tpadding-left: 3em;\n}\naside .layer\n{\n\tposition: absolute;\n\ttop: 54px;\n\tleft: 1em;\n\tpadding-left: 0;\n}\n.disabled\n{\n\tcolor: #0006;\n}\n.feature-bar, aside .scales\n{\n\twidth: 240px;\n}\n.model\n{\n\tfont-size: 20px;\n\tfont-weight: bold;\n\tmargin: 0 1em;\n}\n.result\n{\n\theight: 100%;\n\twidth: auto;\n}\n.value\n{\n\tborder: 0;\n\twidth: 4.1em;\n}\n.loading img\n{\n\topacity: 0.7;\n}\n.scales > span\n{\n\tposition: absolute;\n\ttext-align: center;\n\ttransform: translateX(-50%);\n\tpointer-events: none;\n}\n.psi-bar\n{\n\tdisplay: inline-block;\n\twidth: 600px;\n\tposition: relative;\n}\n.psi-bar input\n{\n\twidth: 100%;\n}\n.psi-bar .scales > span\n{\n\tfont-size: 9px;\n\tbottom: -8px;\n\tcolor: #ccc;\n}\naside .scales\n{\n\tposition: absolute;\n\tdisplay: inline-block;\n\theight: 2em;\n\tpointer-events: none;\n\tmargin: 0;\n\ttransform: translateY(-3em);\n\tcolor: #ccc;\n}\n\n/*.scales .line\n{\n\ttransform: scale(1000);\n}*/\n", map: {"version":3,"sources":["/home/jp/Documents/stylegan-web/app/index.vue"],"names":[],"mappings":";AAshBA;;CAEA,mBAAA;AACA;AAEA;;CAEA,WAAA;CACA,cAAA;AACA;AAEA;;CAEA,eAAA;AACA;AAEA;;CAEA,SAAA;CACA,iBAAA;CACA,wBAAA;CACA,eAAA;AACA;;AAEA;;;EAGA;AAEA;;CAEA,qBAAA;CACA,mBAAA;CACA,0BAAA;AACA;AAEA;;CAEA,gBAAA;CACA,cAAA;AACA;AAEA;;CAEA,iBAAA;AACA;AAEA;;CAEA,kBAAA;CACA,SAAA;CACA,SAAA;CACA,eAAA;AACA;AAEA;;CAEA,YAAA;AACA;AAEA;;CAEA,YAAA;AACA;AAEA;;CAEA,eAAA;CACA,iBAAA;CACA,aAAA;AACA;AAEA;;CAEA,YAAA;CACA,WAAA;AACA;AAEA;;CAEA,SAAA;CACA,YAAA;AACA;AAEA;;CAEA,YAAA;AACA;AAEA;;CAEA,kBAAA;CACA,kBAAA;CACA,2BAAA;CACA,oBAAA;AACA;AAEA;;CAEA,qBAAA;CACA,YAAA;CACA,kBAAA;AACA;AAEA;;CAEA,WAAA;AACA;AAEA;;CAEA,cAAA;CACA,YAAA;CACA,WAAA;AACA;AAEA;;CAEA,kBAAA;CACA,qBAAA;CACA,WAAA;CACA,oBAAA;CACA,SAAA;CACA,2BAAA;CACA,WAAA;AACA;;AAEA;;;EAGA","file":"index.vue","sourcesContent":["<template>\n\t<div @paste=\"onPaste\" @copy.prevent=\"copyLatentCode\">\n\t\t<header>\n\t\t\t<h2 v-if=\"spec\" class=\"model\" title=\"model name\">Model Name:{{spec.model}}</h2>\n\t\t\t<select v-model=\"selected\">\n\t\t\t\t<option disabled value=\"\">Please select one</option>\n\t\t\t\t<option v-for=\"direction in latent_directions\" :value=\"direction\">{{direction}}</option>\n\t\t\t</select>\n\t\t\t<fieldset>\n\t\t\t\t<select v-model=\"fromW\" class=\"latant-type\" :title=\"`generate from ${fromW ? 'W' : 'Z'}`\">\n\t\t\t\t\t<option :value=\"false\">Z</option>\n\t\t\t\t\t<option :value=\"true\">W</option>\n\t\t\t\t</select>&gt;\n\t\t\t</fieldset>\n\t\t\t<fieldset v-if=\"!fromW\">\n\t\t\t\t<button @click=\"convertFromZToW\" title=\"map Z to W\">&#x2192;W</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset v-show=\"!fromW\">\n\t\t\t\t<input type=\"checkbox\" v-model=\"noise\" title=\"with random noise\" :disabled=\"fromW\" />noise\n\t\t\t</fieldset>\n\t\t\t<fieldset v-show=\"fromW\">\n\t\t\t\t<input type=\"checkbox\" v-model=\"extendFeature\" />extend\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<span :title=\"`Randomize intensity: ${Math.exp(randomIntensity)}`\">\n\t\t\t\t\t<input type=\"range\" min=\"-14\" max=\"2\" step=\"0.1\" v-model.number=\"randomIntensity\" />\n\t\t\t\t\t{{Math.exp(randomIntensity).toFixed(4)}}\n\t\t\t\t</span>\n\t\t\t\t<button @click=\"randomizeFeatures\">Randomize</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<button @click=\"zeroFeatures\">Zero</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<a :href=\"tag\">TAG</a>\n\t\t\t\t<button @click=\"copyLatentCode\" title=\"copy latent code\">&#x2398;</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset v-if=\"hashLatents && !fromW\">\n\t\t\t\t<em :title=\"`${latentDistance} RAD`\">{{(latentDistance * 180 / Math.PI).toPrecision(4)}}&deg;</em>\n\t\t\t\t-<StoreInput v-model.number=\"slerpStep\" localKey=\"explorerSlerpStep\" :styleObj=\"{width: '1.6em', border: 0}\" />&deg;\n\t\t\t\t<button @click=\"slerpToHash\" :disabled=\"!latentDistance\" title=\"Slerp towards to hash tag\">Slerp</button>\n\t\t\t</fieldset>\n\t\t\t<!--fieldset v-if=\"hashLatents && fromW\">\n\t\t\t\t<em :title=\"`${latentDistance}`\">{{latentDistance.toPrecision(4)}}</em>\n\t\t\t\t&times;<StoreInput v-model.number=\"lerpFactor\" localKey=\"explorerLerpStep\" :styleObj=\"{width: '2em', border: 0}\" />\n\t\t\t\t<button @click=\"lerpToHash\" title=\"Lerp towards to hash tag\">Lerp</button>\n\t\t\t</fieldset-->\n\t\t\t<fieldset v-show=\"!fromW\" :class=\"{disabled: fromW}\">\n\t\t\t\t<!--&Psi; not work?-->&#x03a8;:\n\t\t\t\t<input class=\"value\" type=\"number\" v-model.number=\"psi\" step=\"0.001\" :disabled=\"fromW\" />\n\t\t\t\t<span class=\"psi-bar\">\n\t\t\t\t\t<input v-show=\"!fromW\" type=\"range\" v-model.lazy=\"psi\" :min=\"-2\" :max=\"2\" step=\"any\" />\n\t\t\t\t\t<span class=\"scales\">\n\t\t\t\t\t\t<span :style=\"{left: '25%'}\">\n\t\t\t\t\t\t\t&#x25b2;<br/>-1\n\t\t\t\t\t\t</span>\n\t\t\t\t\t\t<span :style=\"{left: '50%'}\">\n\t\t\t\t\t\t\t&#x25b2;<br/>0\n\t\t\t\t\t\t</span>\n\t\t\t\t\t\t<span :style=\"{left: '75%'}\">\n\t\t\t\t\t\t\t&#x25b2;<br/>1\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</span>\n\t\t\t\t</span>\n\t\t\t</fieldset>\n\t\t\t<fieldset v-show=\"fromW\">\n\t\t\t\tMagnitude: <em :title=\"currentLatentsMagnitude\">{{currentLatentsMagnitude.toFixed(3)}}</em>\n\t\t\t</fieldset>\n\t\t</header>\n\t\t<aside>\n\t\t\t\n\t\t\t<select v-show=\"useXLatents\" class=\"layer\" v-model=\"shownLayer\" title=\"layer index\">\n\t\t\t\t<option v-for=\"index of latentsLayers\" :key=\"index\" :value=\"index - 1\">{{index - 1}}</option>\n\t\t\t</select>\n\t\t\t<p>\n\t\t\t\t<span class=\"scales\">\n\t\t\t\t\t<span v-for=\"scale of asideScales\" :key=\"scale\" :style=\"{left: `${(Math.tanh(scale / featureNormalFactor()) + 1) * 50}%`}\">\n\t\t\t\t\t\t{{scale}}<br/> &#x25be;<!--span class=\"line\">&#xff5c;</span-->\n\t\t\t\t\t</span>\n\t\t\t\t</span>\n\t\t\t</p>\n\n\t\t\t<ol v-if=\"shownFeatures\">\n\t\t\t\t<li v-for=\"(feature, index) of shownFeatures\" :key=\"index\">\n\t\t\t\t\t<input type=\"range\" class=\"feature-bar\" v-model.lazy=\"feature.normalized\" :min=\"-0.99999999\" :max=\"0.99999999\" step=\"any\" />\n\t\t\t\t\t<input class=\"value\" type=\"number\" v-model.number=\"feature.value\" step=\"0.001\" />\n\t\t\t\t</li>\n\t\t\t</ol>\n\n\t\t</aside>\n\t\t<article :class=\"{loading}\">\n\t\t\t<img v-if=\"latentsBytes\" class=\"result note-box\" :class=\"{activated: copyActivated}\" :src=\"imageURL\" @load=\"loading = false\" />\n\t\t</article>\n\t\t<div v-show=\"initializing\" class=\"initializing\">Model initializing, wait a moment...</div>\n\t\t<Navigator />\n\t</div>\n</template>\n\n<style src=\"./common.css\"></style>\n\n<script>\n\timport StoreInput from \"./storeinput.vue\";\n\timport Navigator from \"./navigator.vue\";\n\n\timport * as LatentCode from \"./latentCode.js\"\n\n\n\n\tfunction parseQueries (str) {\n\t\treturn str.substr(1).split(\"&\").reduce((dict, pair) => {\n\t\t\tconst sections = pair.split(\"=\");\n\t\t\tdict[sections[0]] = sections[1];\n\n\t\t\treturn dict;\n\t\t}, {});\n\t}\n\n\n\tlet featureNormalFactor = 0.6;\n\n\n\tclass Feature {\n\t\tconstructor (value) {\n\t\t\tthis.value = value;\n\t\t}\n\n\n\t\tget normalized () {\n\t\t\treturn Math.tanh(this.value / featureNormalFactor);\n\t\t}\n\n\n\t\tset normalized (v) {\n\t\t\tthis.value = Math.atanh(v) * featureNormalFactor;\n\t\t}\n\n\n\t\trandomize (intensity) {\n\t\t\tthis.value += LatentCode.randn_bm() * intensity;\n\t\t}\n\t};\n\n\n\n\texport default {\n\t\tname: \"index\",\n\n\n\t\tcomponents: {\n\t\t\tStoreInput,\n\t\t\tNavigator,\n\t\t},\n\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\tselected:'',\n\t\t\t\tspec: null,\n\t\t\t\tlatents_dimensions: null,\n\t\t\t\tlatent_directions: null,\n\t\t\t\tlatentsLayers: 0,\n\t\t\t\tfeatures: null,\n\t\t\t\tfeaturesEx: null,\n\t\t\t\tpsi: 0.5,\n\t\t\t\tinitializing: false,\n\t\t\t\tloading: false,\n\t\t\t\trandomIntensity: -3,\n\t\t\t\tnoise: true,\n\t\t\t\tfromW: false,\n\t\t\t\thashLatents: null,\n\t\t\t\tslerpStep: 10,\n\t\t\t\tlerpFactor: 0.8,\n\t\t\t\textendFeature: false,\n\t\t\t\tshownLayer: 0,\n\t\t\t\tcopyActivated: false,\n\t\t\t};\n\t\t},\n\n\n\t\tcomputed: {\n\t\t\tuseXLatents() {\n\t\t\t\treturn this.fromW && this.extendFeature;\n\t\t\t},\n\n\n\t\t\tlatentsBytes: {\n\t\t\t\tget () {\n\t\t\t\t\tif (!this.features)\n\t\t\t\t\t\treturn null;\n\n\t\t\t\t\treturn LatentCode.encodeFloat32(this.featureVector);\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tconst values = LatentCode.decodeFloat32(value);\n\n\t\t\t\t\tvalues.forEach((value, i) => {\n\t\t\t\t\t\tif (this.features && this.features[i])\n\t\t\t\t\t\t\tthis.features[i].value = value;\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t},\n\n\n\t\t\tlatentsBytesEx: {\n\t\t\t\tget () {\n\t\t\t\t\tif (!this.featuresEx)\n\t\t\t\t\t\treturn null;\n\n\t\t\t\t\treturn LatentCode.encodeFixed16(this.featureVectorEx);\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tconst values = LatentCode.decodeFixed16(value);\n\n\t\t\t\t\tvalues.forEach((value, i) => {\n\t\t\t\t\t\tif (this.featuresEx && this.featuresEx[i])\n\t\t\t\t\t\t\tthis.featuresEx[i].value = value;\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t},\n\n\n\t\t\tlatentsURL: {\n\t\t\t\tget () {\n\t\t\t\t\tif (!this.fromW)\n\t\t\t\t\t\treturn `z:${this.psi},${this.latentsBytes}`;\n\t\t\t\t\telse if (!this.extendFeature)\n\t\t\t\t\t\treturn `w:${this.latentsBytes}`;\n\t\t\t\t\telse\n\t\t\t\t\t\treturn `w+:${this.latentsBytesEx}`;\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tconst [_, protocol, path] = value.match(/^([\\w\\+]+):(.+)$/);\n\t\t\t\t\tswitch (protocol) {\n\t\t\t\t\tcase \"z\":\n\t\t\t\t\t\tthis.fromW = false;\n\n\t\t\t\t\t\tconst [_, psi, bytes] = path.match(/^(.+),(.+)$/);\n\t\t\t\t\t\tthis.psi = Number(this.psi);\n\t\t\t\t\t\tthis.latentsBytes = bytes;\n\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tcase \"w\":\n\t\t\t\t\t\tthis.fromW = true;\n\t\t\t\t\t\tthis.extendFeature = false;\n\n\t\t\t\t\t\tthis.latentsBytes = path;\n\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tcase \"w+\":\n\t\t\t\t\t\tthis.fromW = true;\n\t\t\t\t\t\tthis.extendFeature = true;\n\t\t\t\t\t\t\n\t\t\t\t\t\tthis.latentsBytesEx = path;\n\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tdefault:\n\t\t\t\t\t\tconsole.warn(\"latent URL set failed, unexpected protocol:\", protocol);\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t},\n\n\t\t\t\n\t\t\tshownFeatures () {\n\t\t\t\tif (!this.useXLatents)\n\t\t\t\t\treturn this.features;\n\n\t\t\t\treturn this.featuresEx.slice(this.shownLayer * this.latents_dimensions, (this.shownLayer + 1) * this.latents_dimensions);\n\t\t\t},\n\n\n\t\t\tfeaturesInUse () {\n\t\t\t\treturn this.useXLatents ? this.featuresEx : this.features;\n\t\t\t},\n\n\n\t\t\tfeatureVector () {\n\t\t\t\tconst normalized = this.fromW ? 1 : 1 / this.safeFeatureMagnitude;\n\t\t\t\treturn this.features.map(f => f.value * normalized);\n\t\t\t},\n\n\n\t\t\tfeatureVectorEx () {\n\t\t\t\treturn this.featuresEx && this.featuresEx.map(f => f.value);\n\t\t\t},\n\n\n\t\t\tfeatureMagnitude() {\n\t\t\t\tif (!this.features)\n\t\t\t\t\treturn 0;\n\n\t\t\t\tconst result = Math.sqrt(this.features.reduce((sum, f) => sum + f.value * f.value, 0));\n\n\t\t\t\treturn result;\n\t\t\t},\n\n\n\t\t\tsafeFeatureMagnitude() {\n\t\t\t\tconst EPSILON = 1e-9;\n\n\t\t\t\treturn this.featureMagnitude || EPSILON;\n\t\t\t},\n\n\n\t\t\tfeatureMagnitudeEx() {\n\t\t\t\tif (!this.featureVectorEx)\n\t\t\t\t\treturn 0;\n\n\t\t\t\tconst result = Math.sqrt(this.featureVectorEx.reduce((sum, v) => sum + v * v, 0));\n\n\t\t\t\treturn result;\n\t\t\t},\n\n\n\t\t\tcurrentLatentsMagnitude () {\n\t\t\t\treturn this.extendFeature ? this.featureMagnitudeEx / this.latentsLayers : this.featureMagnitude;\n\t\t\t},\n\n\n\t\t\timageURL () {\n\t\t\t\tconst latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;\n\n\t\t\t\treturn `/generate?${this.fromW ? \"fromW=1\" : \"psi=\" + this.psi.toString()}${this.noise ? \"&randomize_noise=1\" : \"\"}&${latentStr}`;\n\t\t\t},\n\n\n\t\t\ttag () {\n\t\t\t\tconst latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;\n\n\t\t\t\treturn `#${this.fromW ? \"fromW=1\" : \"psi=\" + this.psi.toString()}&${latentStr}`;\n\t\t\t},\n\n\n\t\t\tlatentDistance() {\n\t\t\t\tif (!this.hashLatents)\n\t\t\t\t\treturn NaN;\n\n\t\t\t\tif (this.fromW)\n\t\t\t\t\treturn LatentCode.distanceBetween(this.featureVector, this.hashLatents);\n\t\t\t\telse\n\t\t\t\t\treturn LatentCode.angleBetween(this.featureVector, this.hashLatents);\n\t\t\t},\n\n\t\t\tasideScales() {\n\t\t\t\treturn this.fromW ? [-10, 0, 10] : [-1, 0, 1];\n\t\t\t},\n\t\t},\n\n\n\t\tasync mounted () {\n\t\t\twindow.$main = this;\n\n\t\t\tthis.initializing = true;\n\t\t\tconst res = await fetch(\"/spec\");\n\t\t\tthis.spec = await res.json();\n\t\t\tconsole.log(\"model spec:\", this.spec);\n\n\t\t\tthis.latents_dimensions = this.spec.latents_dimensions;\n\t\t\tthis.latent_directions = this.spec.latent_directions;\n\t\t\t// console.log(\"this.latent_directions:\",this.latent_directions)\n\n\t\t\tthis.latentsLayers = this.spec.synthesis_input_shape[1];\n\t\t\t// this should be the count of latent directions\n\t\t\t// this.latentDirection = Array(this.spec.latent_directions).fill().map(() => new Feature(0));\n\t\t\t// this.latentDirectionEx = Array(this.spec.latent_directions * this.spec.latent_directions.count).fill().map(() => new Feature(0));\n\n\n\t\t\tthis.initializing = false;\n\n\t\t\tthis.features = Array(this.spec.latents_dimensions).fill().map(() => new Feature(0));\n\t\t\tthis.featuresEx = Array(this.spec.latents_dimensions * this.latentsLayers).fill().map(() => new Feature(0));\n\n\t\t\twindow.onhashchange = () => this.loadHash();\n\n\t\t\tif (location.hash)\n\t\t\t\tthis.loadHash();\n\t\t},\n\n\n\t\tmethods: {\n\t\t\trandomizeFeatures() {\n\t\t\t\tif (this.shownFeatures)\n\t\t\t\t\tthis.shownFeatures.forEach(f => f.randomize(Math.exp(this.randomIntensity)));\n\t\t\t},\n\n\n\t\t\tzeroFeatures() {\n\t\t\t\tif (this.featuresInUse)\n\t\t\t\t\tthis.featuresInUse.forEach(f => f.value = 0);\n\t\t\t},\n\n\n\t\t\tloadHash () {\n\t\t\t\tconst dict = parseQueries(location.hash);\n\t\t\t\t//console.log(\"dict:\", dict);\n\n\t\t\t\tconst psi = Number(dict.psi);\n\t\t\t\tif (Number.isFinite(psi))\n\t\t\t\t\tthis.psi = psi;\n\n\t\t\t\tif (dict.xlatents) {\n\t\t\t\t\tthis.latentsBytesEx = dict.xlatents;\n\t\t\t\t\tthis.extendFeature = true;\n\t\t\t\t}\n\t\t\t\telse if (dict.latents) {\n\t\t\t\t\tthis.latentsBytes = dict.latents;\n\t\t\t\t\tthis.extendFeature = false;\n\t\t\t\t}\n\n\t\t\t\tthis.fromW = dict.fromW ? true : false;\n\n\t\t\t\tthis.updateHashLatents();\n\t\t\t},\n\n\n\t\t\tnormalizeFeatures () {\n\t\t\t\tthis.features.forEach(f => f.value /= this.safeFeatureMagnitude);\n\t\t\t},\n\n\n\t\t\trotateFeatures (target, theta) {\n\t\t\t\tconsole.assert(target.length === this.features.length);\n\n\t\t\t\tthis.normalizeFeatures();\n\n\t\t\t\tconst dot = Math.min(1, Math.max(-1, target.reduce((sum, t, i) => sum + t * this.features[i].value, 0)));\n\t\t\t\t//console.assert(Math.abs(dot) <= 1, \"unexpect dot:\", dot, target);\n\n\t\t\t\tconst sinOmega = Math.sqrt(1 - dot * dot);\n\t\t\t\tconst sinTheta = Math.sin(theta);\n\t\t\t\tif (sinOmega < sinTheta) {\n\t\t\t\t\tthis.features.forEach((f, i) => f.value = target[i]);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\tconst side = target.map((t, i) => t - this.features[i].value * dot);\n\t\t\t\tconst relative = side.map(v => v * sinTheta / sinOmega);\n\n\t\t\t\tconst cosTheta = Math.cos(theta);\n\t\t\t\tthis.features.forEach((f, i) => f.value = f.value * cosTheta + relative[i]);\n\t\t\t},\n\n\n\t\t\tslerpToHash () {\n\t\t\t\tconst targetLatents = parseQueries(location.hash).latents;\n\t\t\t\tif (targetLatents) {\n\t\t\t\t\tthis.rotateFeatures(this.hashLatents, this.slerpStep * Math.PI / 180);\n\t\t\t\t}\n\t\t\t},\n\n\n\t\t\tlerpToHash () {\n\t\t\t\tthis.features.forEach((f, i) => f.value = f.value * this.lerpFactor + this.hashLatents[i] * (1 - this.lerpFactor));\n\t\t\t},\n\n\n\t\t\tupdateHashLatents() {\n\t\t\t\tif (this.latentsBytes) {\n\t\t\t\t\tconst lvec = LatentCode.decodeFloat32(this.latentsBytes);\n\t\t\t\t\tthis.hashLatents = this.fromW ? lvec : LatentCode.normalize(lvec);\n\t\t\t\t}\n\t\t\t\telse\n\t\t\t\t\tthis.hashLatents = null;\n\t\t\t},\n\n\n\t\t\tcopyLatentCode() {\n\t\t\t\tnavigator.clipboard.writeText(this.latentsURL);\n\t\t\t\tconsole.log(\"Latent code copied into clipboard.\");\n\n\t\t\t\tthis.copyActivated = true;\n\t\t\t\tsetTimeout(() => this.copyActivated = false, 100);\n\t\t\t},\n\n\n\t\t\tasync onPaste(event) {\n\t\t\t\t//console.log(\"onPaste:\", [...event.clipboardData.items]);\n\t\t\t\tconst text = await new Promise(resolve => [...event.clipboardData.items][0].getAsString(resolve));\n\t\t\t\t//console.log(\"text:\", text);\n\t\t\t\ttry {\n\t\t\t\t\t// check if text is valid latent code\n\t\t\t\t\t/*const origin = atob(text);\n\t\t\t\t\tif (origin.length !== this.latents_dimensions * 4)\n\t\t\t\t\t\tthrow new Error(\"invalid latent code\");*/\n\t\t\t\t\tif (!/^[\\w+]+:.+$/.test(text))\n\t\t\t\t\t\tthrow new Error(\"invalid latent code\");\n\n\t\t\t\t\tthis.latentsURL = text;\n\t\t\t\t}\n\t\t\t\tcatch (error) {\n\t\t\t\t\tconsole.warn(\"latent code paste failed:\", error);\n\t\t\t\t}\n\t\t\t},\n\n\n\t\t\tfeatureNormalFactor() {\n\t\t\t\treturn featureNormalFactor;\n\t\t\t},\n\n\n\t\t\tasync convertFromZToW () {\n\t\t\t\tthis.latentsBytes = await (await fetch(`/map-z-w?psi=${this.psi}&z=${encodeURIComponent(this.latentsBytes)}`)).text();\n\t\t\t\tthis.fromW = true;\n\t\t\t\tthis.extendFeature = false;\n\t\t\t},\n\t\t},\n\n\n\t\twatch: {\n\t\t\timageURL () {\n\t\t\t\tthis.loading = true;\n\t\t\t},\n\n\n\t\t\tfromW (value) {\n\t\t\t\tfeatureNormalFactor = value ? 12 : 0.6;\n\n\t\t\t\tthis.updateHashLatents();\n\t\t\t},\n\n\n\t\t\t/*extendFeature (value) {\n\t\t\t\t// set featuresEX value by tiling features' value\n\t\t\t\tif (value)\n\t\t\t\t\tthis.featuresEx.forEach((feature, i) => feature.value = this.features[i % this.features.length].value);\n\t\t\t},*/\n\t\t},\n\t};\n</script>\n\n<style src=\"./common.css\"></style>\n<style>\n\tbody\n\t{\n\t\twhite-space: nowrap;\n\t}\n\n\theader\n\t{\n\t\theight: 2em;\n\t\tmargin: 20px 0;\n\t}\n\n\theader h2\n\t{\n\t\tdisplay: inline;\n\t}\n\n\t.latant-type\n\t{\n\t\tborder: 0;\n\t\tfont-weight: bold;\n\t\t-webkit-appearance: none;\n\t\tcursor: pointer;\n\t}\n\n\t/*.latant-type:hover\n\t{\n\t\t-webkit-appearance: menulist;\n\t}*/\n\n\taside, article\n\t{\n\t\tdisplay: inline-block;\n\t\tvertical-align: top;\n\t\theight: calc(100vh - 72px);\n\t}\n\n\taside\n\t{\n\t\toverflow-y: auto;\n\t\tfont-size: 9px;\n\t}\n\n\taside > *\n\t{\n\t\tpadding-left: 3em;\n\t}\n\n\taside .layer\n\t{\n\t\tposition: absolute;\n\t\ttop: 54px;\n\t\tleft: 1em;\n\t\tpadding-left: 0;\n\t}\n\n\t.disabled\n\t{\n\t\tcolor: #0006;\n\t}\n\n\t.feature-bar, aside .scales\n\t{\n\t\twidth: 240px;\n\t}\n\n\t.model\n\t{\n\t\tfont-size: 20px;\n\t\tfont-weight: bold;\n\t\tmargin: 0 1em;\n\t}\n\n\t.result\n\t{\n\t\theight: 100%;\n\t\twidth: auto;\n\t}\n\n\t.value\n\t{\n\t\tborder: 0;\n\t\twidth: 4.1em;\n\t}\n\n\t.loading img\n\t{\n\t\topacity: 0.7;\n\t}\n\n\t.scales > span\n\t{\n\t\tposition: absolute;\n\t\ttext-align: center;\n\t\ttransform: translateX(-50%);\n\t\tpointer-events: none;\n\t}\n\n\t.psi-bar\n\t{\n\t\tdisplay: inline-block;\n\t\twidth: 600px;\n\t\tposition: relative;\n\t}\n\n\t.psi-bar input\n\t{\n\t\twidth: 100%;\n\t}\n\n\t.psi-bar .scales > span\n\t{\n\t\tfont-size: 9px;\n\t\tbottom: -8px;\n\t\tcolor: #ccc;\n\t}\n\n\taside .scales\n\t{\n\t\tposition: absolute;\n\t\tdisplay: inline-block;\n\t\theight: 2em;\n\t\tpointer-events: none;\n\t\tmargin: 0;\n\t\ttransform: translateY(-3em);\n\t\tcolor: #ccc;\n\t}\n\n\t/*.scales .line\n\t{\n\t\ttransform: scale(1000);\n\t}*/\n</style>\n"]}, media: undefined });
+      inject("data-v-2d1cdd6d_0", { source: "\nhtml\n{\n\toverflow: hidden;\n\tfont-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}\nheader fieldset\n{\n\tdisplay: inline-block;\n\tmargin: 0 .6em;\n\tborder: 0;\n\tpadding: 0;\n}\n.initializing\n{\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\tbottom: 0;\n\tright: 0;\n\tfont-size: 10vh;\n\tpadding: 30vh 2em 0;\n\twhite-space: normal;\n\tbackground-color: #ccca;\n\tcolor: #444c;\n}\n.note-box\n{\n\ttransition: outline-color .6s ease-out;\n\toutline: 4px transparent solid;\n}\n.note-box.activated\n{\n\toutline-color: #0f6;\n\ttransition: outline-color .01s;\n}\nbutton.icon\n{\n\tbackground: transparent;\n\tborder: 0;\n\tcursor: pointer;\n}\nbutton.icon:hover\n{\n\ttransform: scale(1.1);\n}\n", map: undefined, media: undefined })
+  ,inject("data-v-2d1cdd6d_1", { source: "\nhtml\n{\n\toverflow: hidden;\n\tfont-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}\nheader fieldset\n{\n\tdisplay: inline-block;\n\tmargin: 0 .6em;\n\tborder: 0;\n\tpadding: 0;\n}\n.initializing\n{\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\tbottom: 0;\n\tright: 0;\n\tfont-size: 10vh;\n\tpadding: 30vh 2em 0;\n\twhite-space: normal;\n\tbackground-color: #ccca;\n\tcolor: #444c;\n}\n.note-box\n{\n\ttransition: outline-color .6s ease-out;\n\toutline: 4px transparent solid;\n}\n.note-box.activated\n{\n\toutline-color: #0f6;\n\ttransition: outline-color .01s;\n}\nbutton.icon\n{\n\tbackground: transparent;\n\tborder: 0;\n\tcursor: pointer;\n}\nbutton.icon:hover\n{\n\ttransform: scale(1.1);\n}\n", map: undefined, media: undefined })
+  ,inject("data-v-2d1cdd6d_2", { source: "\nbody\n{\n\twhite-space: nowrap;\n}\nheader\n{\n\theight: 2em;\n\tmargin: 20px 0;\n}\nheader h2\n{\n\tdisplay: inline;\n}\n.latant-type\n{\n\tborder: 0;\n\tfont-weight: bold;\n\t-webkit-appearance: none;\n\tcursor: pointer;\n}\n\n/*.latant-type:hover\n{\n\t-webkit-appearance: menulist;\n}*/\naside, article\n{\n\tdisplay: inline-block;\n\tvertical-align: top;\n\theight: calc(100vh - 72px);\n}\naside\n{\n\toverflow-y: auto;\n\tfont-size: 9px;\n}\naside > *\n{\n\tpadding-left: 3em;\n}\naside .layer\n{\n\tposition: absolute;\n\ttop: 54px;\n\tleft: 1em;\n\tpadding-left: 0;\n}\n.disabled\n{\n\tcolor: #0006;\n}\n.feature-bar, aside .scales\n{\n\twidth: 240px;\n}\n.model\n{\n\tfont-size: 20px;\n\tfont-weight: bold;\n\tmargin: 0 1em;\n}\n.result\n{\n\theight: 100%;\n\twidth: auto;\n}\n.value\n{\n\tborder: 0;\n\twidth: 4.1em;\n}\n.loading img\n{\n\topacity: 0.7;\n}\n.scales > span\n{\n\tposition: absolute;\n\ttext-align: center;\n\ttransform: translateX(-50%);\n\tpointer-events: none;\n}\n.psi-bar\n{\n\tdisplay: inline-block;\n\twidth: 600px;\n\tposition: relative;\n}\n.psi-bar input\n{\n\twidth: 100%;\n}\n.psi-bar .scales > span\n{\n\tfont-size: 9px;\n\tbottom: -8px;\n\tcolor: #ccc;\n}\naside .scales\n{\n\tposition: absolute;\n\tdisplay: inline-block;\n\theight: 2em;\n\tpointer-events: none;\n\tmargin: 0;\n\ttransform: translateY(-3em);\n\tcolor: #ccc;\n}\n\n/*.scales .line\n{\n\ttransform: scale(1000);\n}*/\n", map: {"version":3,"sources":["/home/jp/Documents/stylegan-web/app/index.vue"],"names":[],"mappings":";AAgiBA;;CAEA,mBAAA;AACA;AAEA;;CAEA,WAAA;CACA,cAAA;AACA;AAEA;;CAEA,eAAA;AACA;AAEA;;CAEA,SAAA;CACA,iBAAA;CACA,wBAAA;CACA,eAAA;AACA;;AAEA;;;EAGA;AAEA;;CAEA,qBAAA;CACA,mBAAA;CACA,0BAAA;AACA;AAEA;;CAEA,gBAAA;CACA,cAAA;AACA;AAEA;;CAEA,iBAAA;AACA;AAEA;;CAEA,kBAAA;CACA,SAAA;CACA,SAAA;CACA,eAAA;AACA;AAEA;;CAEA,YAAA;AACA;AAEA;;CAEA,YAAA;AACA;AAEA;;CAEA,eAAA;CACA,iBAAA;CACA,aAAA;AACA;AAEA;;CAEA,YAAA;CACA,WAAA;AACA;AAEA;;CAEA,SAAA;CACA,YAAA;AACA;AAEA;;CAEA,YAAA;AACA;AAEA;;CAEA,kBAAA;CACA,kBAAA;CACA,2BAAA;CACA,oBAAA;AACA;AAEA;;CAEA,qBAAA;CACA,YAAA;CACA,kBAAA;AACA;AAEA;;CAEA,WAAA;AACA;AAEA;;CAEA,cAAA;CACA,YAAA;CACA,WAAA;AACA;AAEA;;CAEA,kBAAA;CACA,qBAAA;CACA,WAAA;CACA,oBAAA;CACA,SAAA;CACA,2BAAA;CACA,WAAA;AACA;;AAEA;;;EAGA","file":"index.vue","sourcesContent":["<template>\n\t<div @paste=\"onPaste\" @copy.prevent=\"copyLatentCode\">\n\t\t<header>\n\t\t\t<h2 v-if=\"spec\" class=\"model\" title=\"model name\">Model Name:{{spec.model}}</h2>\n\t\t\t<select v-model=\"selectedDirection\" @change=\"onChange($event)\">\n\t\t\t\t<option disabled value=\"\">Please select one</option>\n\t\t\t\t<option v-for=\"direction in latent_directions\" :value=\"direction\">{{direction}}</option>\n\t\t\t</select>\n\t\t\t<fieldset>\n\t\t\t\t<select v-model=\"fromW\" class=\"latant-type\" :title=\"`generate from ${fromW ? 'W' : 'Z'}`\">\n\t\t\t\t\t<option :value=\"false\">Z</option>\n\t\t\t\t\t<option :value=\"true\">W</option>\n\t\t\t\t</select>&gt;\n\t\t\t</fieldset>\n\t\t\t<fieldset v-if=\"!fromW\">\n\t\t\t\t<button @click=\"convertFromZToW\" title=\"map Z to W\">&#x2192;W</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset v-show=\"!fromW\">\n\t\t\t\t<input type=\"checkbox\" v-model=\"noise\" title=\"with random noise\" :disabled=\"fromW\" />noise\n\t\t\t</fieldset>\n\t\t\t<fieldset v-show=\"fromW\">\n\t\t\t\t<input type=\"checkbox\" v-model=\"extendFeature\" />extend\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<span :title=\"`Randomize intensity: ${Math.exp(randomIntensity)}`\">\n\t\t\t\t\t<input type=\"range\" min=\"-14\" max=\"2\" step=\"0.1\" v-model.number=\"randomIntensity\" />\n\t\t\t\t\t{{Math.exp(randomIntensity).toFixed(4)}}\n\t\t\t\t</span>\n\t\t\t\t<button @click=\"randomizeFeatures\">Randomize</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<button @click=\"zeroFeatures\">Zero</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<a :href=\"tag\">TAG</a>\n\t\t\t\t<button @click=\"copyLatentCode\" title=\"copy latent code\">&#x2398;</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset v-if=\"hashLatents && !fromW\">\n\t\t\t\t<em :title=\"`${latentDistance} RAD`\">{{(latentDistance * 180 / Math.PI).toPrecision(4)}}&deg;</em>\n\t\t\t\t-<StoreInput v-model.number=\"slerpStep\" localKey=\"explorerSlerpStep\" :styleObj=\"{width: '1.6em', border: 0}\" />&deg;\n\t\t\t\t<button @click=\"slerpToHash\" :disabled=\"!latentDistance\" title=\"Slerp towards to hash tag\">Slerp</button>\n\t\t\t</fieldset>\n\t\t\t<!--fieldset v-if=\"hashLatents && fromW\">\n\t\t\t\t<em :title=\"`${latentDistance}`\">{{latentDistance.toPrecision(4)}}</em>\n\t\t\t\t&times;<StoreInput v-model.number=\"lerpFactor\" localKey=\"explorerLerpStep\" :styleObj=\"{width: '2em', border: 0}\" />\n\t\t\t\t<button @click=\"lerpToHash\" title=\"Lerp towards to hash tag\">Lerp</button>\n\t\t\t</fieldset-->\n\t\t\t<fieldset v-show=\"!fromW\" :class=\"{disabled: fromW}\">\n\t\t\t\t<!--&Psi; not work?-->&#x03a8;:\n\t\t\t\t<input class=\"value\" type=\"number\" v-model.number=\"psi\" step=\"0.001\" :disabled=\"fromW\" />\n\t\t\t\t<span class=\"psi-bar\">\n\t\t\t\t\t<input v-show=\"!fromW\" type=\"range\" v-model.lazy=\"psi\" :min=\"-2\" :max=\"2\" step=\"any\" />\n\t\t\t\t\t<span class=\"scales\">\n\t\t\t\t\t\t<span :style=\"{left: '25%'}\">\n\t\t\t\t\t\t\t&#x25b2;<br/>-1\n\t\t\t\t\t\t</span>\n\t\t\t\t\t\t<span :style=\"{left: '50%'}\">\n\t\t\t\t\t\t\t&#x25b2;<br/>0\n\t\t\t\t\t\t</span>\n\t\t\t\t\t\t<span :style=\"{left: '75%'}\">\n\t\t\t\t\t\t\t&#x25b2;<br/>1\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</span>\n\t\t\t\t</span>\n\t\t\t</fieldset>\n\t\t\t<fieldset v-show=\"fromW\">\n\t\t\t\tMagnitude: <em :title=\"currentLatentsMagnitude\">{{currentLatentsMagnitude.toFixed(3)}}</em>\n\t\t\t</fieldset>\n\t\t</header>\n\t\t<aside>\n\t\t\t\n\t\t\t<select v-show=\"useXLatents\" class=\"layer\" v-model=\"shownLayer\" title=\"layer index\">\n\t\t\t\t<option v-for=\"index of latentsLayers\" :key=\"index\" :value=\"index - 1\">{{index - 1}}</option>\n\t\t\t</select>\n\t\t\t<p>\n\t\t\t\t<span class=\"scales\">\n\t\t\t\t\t<span v-for=\"scale of asideScales\" :key=\"scale\" :style=\"{left: `${(Math.tanh(scale / featureNormalFactor()) + 1) * 50}%`}\">\n\t\t\t\t\t\t{{scale}}<br/> &#x25be;<!--span class=\"line\">&#xff5c;</span-->\n\t\t\t\t\t</span>\n\t\t\t\t</span>\n\t\t\t</p>\n\n\t\t\t<ol v-if=\"shownFeatures\">\n\t\t\t\t<li v-for=\"(feature, index) of shownFeatures\" :key=\"index\">\n\t\t\t\t\t<input type=\"range\" class=\"feature-bar\" v-model.lazy=\"feature.normalized\" :min=\"-0.99999999\" :max=\"0.99999999\" step=\"any\" />\n\t\t\t\t\t<input class=\"value\" type=\"number\" v-model.number=\"feature.value\" step=\"0.001\" />\n\t\t\t\t</li>\n\t\t\t</ol>\n\n\t\t</aside>\n\t\t<article :class=\"{loading}\">\n\t\t\t<img v-if=\"latentsBytes\" class=\"result note-box\" :class=\"{activated: copyActivated}\" :src=\"imageURL\" @load=\"loading = false\" />\n\t\t</article>\n\t\t<div v-show=\"initializing\" class=\"initializing\">Model initializing, wait a moment...</div>\n\t\t<Navigator />\n\t</div>\n</template>\n\n<style src=\"./common.css\"></style>\n\n<script>\n\timport StoreInput from \"./storeinput.vue\";\n\timport Navigator from \"./navigator.vue\";\n\n\timport * as LatentCode from \"./latentCode.js\"\n\n\n\n\tfunction parseQueries (str) {\n\t\treturn str.substr(1).split(\"&\").reduce((dict, pair) => {\n\t\t\tconst sections = pair.split(\"=\");\n\t\t\tdict[sections[0]] = sections[1];\n\n\t\t\treturn dict;\n\t\t}, {});\n\t}\n\n\n\tlet featureNormalFactor = 0.6;\n\n\n\tclass Feature {\n\t\tconstructor (value) {\n\t\t\tthis.value = value;\n\t\t}\n\n\n\t\tget normalized () {\n\t\t\treturn Math.tanh(this.value / featureNormalFactor);\n\t\t}\n\n\n\t\tset normalized (v) {\n\t\t\tthis.value = Math.atanh(v) * featureNormalFactor;\n\t\t}\n\n\n\t\trandomize (intensity) {\n\t\t\tthis.value += LatentCode.randn_bm() * intensity;\n\t\t}\n\t};\n\n\n\n\texport default {\n\t\tname: \"index\",\n\n\n\t\tcomponents: {\n\t\t\tStoreInput,\n\t\t\tNavigator,\n\t\t},\n\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\tselectedDirection:'',\n\t\t\t\tspec: null,\n\t\t\t\tlatents_dimensions: null,\n\t\t\t\tlatent_directions: null,\n\t\t\t\tlatentsLayers: 0,\n\t\t\t\tfeatures: null,\n\t\t\t\tfeaturesEx: null,\n\t\t\t\tpsi: 0.5,\n\t\t\t\tinitializing: false,\n\t\t\t\tloading: false,\n\t\t\t\trandomIntensity: -3,\n\t\t\t\tnoise: true,\n\t\t\t\tfromW: false,\n\t\t\t\thashLatents: null,\n\t\t\t\tslerpStep: 10,\n\t\t\t\tlerpFactor: 0.8,\n\t\t\t\textendFeature: false,\n\t\t\t\tshownLayer: 0,\n\t\t\t\tcopyActivated: false,\n\t\t\t};\n\t\t},\n\n\n\t\tcomputed: {\n\t\t\tuseXLatents() {\n\t\t\t\treturn this.fromW && this.extendFeature;\n\t\t\t},\n\n\n\t\t\tlatentsBytes: {\n\t\t\t\tget () {\n\t\t\t\t\tif (!this.features)\n\t\t\t\t\t\treturn null;\n\n\t\t\t\t\treturn LatentCode.encodeFloat32(this.featureVector);\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tconst values = LatentCode.decodeFloat32(value);\n\n\t\t\t\t\tvalues.forEach((value, i) => {\n\t\t\t\t\t\tif (this.features && this.features[i])\n\t\t\t\t\t\t\tthis.features[i].value = value;\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t},\n\n\n\t\t\tlatentsBytesEx: {\n\t\t\t\tget () {\n\t\t\t\t\tif (!this.featuresEx)\n\t\t\t\t\t\treturn null;\n\n\t\t\t\t\treturn LatentCode.encodeFixed16(this.featureVectorEx);\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tconst values = LatentCode.decodeFixed16(value);\n\n\t\t\t\t\tvalues.forEach((value, i) => {\n\t\t\t\t\t\tif (this.featuresEx && this.featuresEx[i])\n\t\t\t\t\t\t\tthis.featuresEx[i].value = value;\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t},\n\n\n\t\t\tlatentsURL: {\n\t\t\t\tget () {\n\t\t\t\t\tif (!this.fromW)\n\t\t\t\t\t\treturn `z:${this.psi},${this.latentsBytes}`;\n\t\t\t\t\telse if (!this.extendFeature)\n\t\t\t\t\t\treturn `w:${this.latentsBytes}`;\n\t\t\t\t\telse\n\t\t\t\t\t\treturn `w+:${this.latentsBytesEx}`;\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tconst [_, protocol, path] = value.match(/^([\\w\\+]+):(.+)$/);\n\t\t\t\t\tswitch (protocol) {\n\t\t\t\t\tcase \"z\":\n\t\t\t\t\t\tthis.fromW = false;\n\n\t\t\t\t\t\tconst [_, psi, bytes] = path.match(/^(.+),(.+)$/);\n\t\t\t\t\t\tthis.psi = Number(this.psi);\n\t\t\t\t\t\tthis.latentsBytes = bytes;\n\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tcase \"w\":\n\t\t\t\t\t\tthis.fromW = true;\n\t\t\t\t\t\tthis.extendFeature = false;\n\n\t\t\t\t\t\tthis.latentsBytes = path;\n\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tcase \"w+\":\n\t\t\t\t\t\tthis.fromW = true;\n\t\t\t\t\t\tthis.extendFeature = true;\n\t\t\t\t\t\t\n\t\t\t\t\t\tthis.latentsBytesEx = path;\n\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tdefault:\n\t\t\t\t\t\tconsole.warn(\"latent URL set failed, unexpected protocol:\", protocol);\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t},\n\n\t\t\t\n\t\t\tshownFeatures () {\n\t\t\t\tif (!this.useXLatents)\n\t\t\t\t\treturn this.features;\n\n\t\t\t\treturn this.featuresEx.slice(this.shownLayer * this.latents_dimensions, (this.shownLayer + 1) * this.latents_dimensions);\n\t\t\t},\n\n\n\t\t\tfeaturesInUse () {\n\t\t\t\treturn this.useXLatents ? this.featuresEx : this.features;\n\t\t\t},\n\n\n\t\t\tfeatureVector () {\n\t\t\t\tconst normalized = this.fromW ? 1 : 1 / this.safeFeatureMagnitude;\n\t\t\t\treturn this.features.map(f => f.value * normalized);\n\t\t\t},\n\n\n\t\t\tfeatureVectorEx () {\n\t\t\t\treturn this.featuresEx && this.featuresEx.map(f => f.value);\n\t\t\t},\n\n\n\t\t\tfeatureMagnitude() {\n\t\t\t\tif (!this.features)\n\t\t\t\t\treturn 0;\n\n\t\t\t\tconst result = Math.sqrt(this.features.reduce((sum, f) => sum + f.value * f.value, 0));\n\n\t\t\t\treturn result;\n\t\t\t},\n\n\n\t\t\tsafeFeatureMagnitude() {\n\t\t\t\tconst EPSILON = 1e-9;\n\n\t\t\t\treturn this.featureMagnitude || EPSILON;\n\t\t\t},\n\n\n\t\t\tfeatureMagnitudeEx() {\n\t\t\t\tif (!this.featureVectorEx)\n\t\t\t\t\treturn 0;\n\n\t\t\t\tconst result = Math.sqrt(this.featureVectorEx.reduce((sum, v) => sum + v * v, 0));\n\n\t\t\t\treturn result;\n\t\t\t},\n\n\n\t\t\tcurrentLatentsMagnitude () {\n\t\t\t\treturn this.extendFeature ? this.featureMagnitudeEx / this.latentsLayers : this.featureMagnitude;\n\t\t\t},\n\n\n\t\t\timageURL () {\n\t\t\t\tconst latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;\n\n\t\t\t\treturn `/generate?${this.fromW ? \"fromW=1\" : \"psi=\" + this.psi.toString()}${this.noise ? \"&randomize_noise=1\" : \"\"}&${latentStr}`;\n\t\t\t},\n\n\n\t\t\ttag () {\n\t\t\t\tconst latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;\n\n\t\t\t\treturn `#${this.fromW ? \"fromW=1\" : \"psi=\" + this.psi.toString()}&${latentStr}`;\n\t\t\t},\n\n\n\t\t\tlatentDistance() {\n\t\t\t\tif (!this.hashLatents)\n\t\t\t\t\treturn NaN;\n\n\t\t\t\tif (this.fromW)\n\t\t\t\t\treturn LatentCode.distanceBetween(this.featureVector, this.hashLatents);\n\t\t\t\telse\n\t\t\t\t\treturn LatentCode.angleBetween(this.featureVector, this.hashLatents);\n\t\t\t},\n\n\t\t\tasideScales() {\n\t\t\t\treturn this.fromW ? [-10, 0, 10] : [-1, 0, 1];\n\t\t\t},\n\t\t},\n\n\n\t\tasync mounted () {\n\t\t\twindow.$main = this;\n\n\t\t\tthis.initializing = true;\n\t\t\tconst res = await fetch(\"/spec\");\n\t\t\tthis.spec = await res.json();\n\t\t\tconsole.log(\"model spec:\", this.spec);\n\n\t\t\tthis.latents_dimensions = this.spec.latents_dimensions;\n\t\t\tthis.latent_directions = this.spec.latent_directions;\n\t\t\t// console.log(\"this.latent_directions:\",this.latent_directions)\n\n\t\t\tthis.latentsLayers = this.spec.synthesis_input_shape[1];\n\t\t\t// this should be the count of latent directions\n\t\t\t// this.latentDirection = Array(this.spec.latent_directions).fill().map(() => new Feature(0));\n\t\t\t// this.latentDirectionEx = Array(this.spec.latent_directions * this.spec.latent_directions.count).fill().map(() => new Feature(0));\n\n\n\t\t\tthis.initializing = false;\n\n\t\t\tthis.features = Array(this.spec.latents_dimensions).fill().map(() => new Feature(0));\n\t\t\tthis.featuresEx = Array(this.spec.latents_dimensions * this.latentsLayers).fill().map(() => new Feature(0));\n\n\t\t\twindow.onhashchange = () => this.loadHash();\n\n\t\t\tif (location.hash)\n\t\t\t\tthis.loadHash();\n\t\t},\n\n\n\t\tmethods: {\n\n\t\t\t\n\t\t\trandomizeFeatures() {\n\t\t\t\tif (this.shownFeatures)\n\t\t\t\t\tthis.shownFeatures.forEach(f => f.randomize(Math.exp(this.randomIntensity)));\n\t\t\t},\n\n\n\t\t\tzeroFeatures() {\n\t\t\t\tif (this.featuresInUse)\n\t\t\t\t\tthis.featuresInUse.forEach(f => f.value = 0);\n\t\t\t},\n\n\n\t\t\tloadHash () {\n\t\t\t\tconst dict = parseQueries(location.hash);\n\t\t\t\t//console.log(\"dict:\", dict);\n\n\t\t\t\tconst psi = Number(dict.psi);\n\t\t\t\tif (Number.isFinite(psi))\n\t\t\t\t\tthis.psi = psi;\n\n\t\t\t\tif (dict.xlatents) {\n\t\t\t\t\tthis.latentsBytesEx = dict.xlatents;\n\t\t\t\t\tthis.extendFeature = true;\n\t\t\t\t}\n\t\t\t\telse if (dict.latents) {\n\t\t\t\t\tthis.latentsBytes = dict.latents;\n\t\t\t\t\tthis.extendFeature = false;\n\t\t\t\t}\n\n\t\t\t\tthis.fromW = dict.fromW ? true : false;\n\n\t\t\t\tthis.updateHashLatents();\n\t\t\t},\n\n\n\t\t\tnormalizeFeatures () {\n\t\t\t\tthis.features.forEach(f => f.value /= this.safeFeatureMagnitude);\n\t\t\t},\n\n\n\t\t\trotateFeatures (target, theta) {\n\t\t\t\tconsole.assert(target.length === this.features.length);\n\n\t\t\t\tthis.normalizeFeatures();\n\n\t\t\t\tconst dot = Math.min(1, Math.max(-1, target.reduce((sum, t, i) => sum + t * this.features[i].value, 0)));\n\t\t\t\t//console.assert(Math.abs(dot) <= 1, \"unexpect dot:\", dot, target);\n\n\t\t\t\tconst sinOmega = Math.sqrt(1 - dot * dot);\n\t\t\t\tconst sinTheta = Math.sin(theta);\n\t\t\t\tif (sinOmega < sinTheta) {\n\t\t\t\t\tthis.features.forEach((f, i) => f.value = target[i]);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\tconst side = target.map((t, i) => t - this.features[i].value * dot);\n\t\t\t\tconst relative = side.map(v => v * sinTheta / sinOmega);\n\n\t\t\t\tconst cosTheta = Math.cos(theta);\n\t\t\t\tthis.features.forEach((f, i) => f.value = f.value * cosTheta + relative[i]);\n\t\t\t},\n\n\n\t\t\tslerpToHash () {\n\t\t\t\tconst targetLatents = parseQueries(location.hash).latents;\n\t\t\t\tif (targetLatents) {\n\t\t\t\t\tthis.rotateFeatures(this.hashLatents, this.slerpStep * Math.PI / 180);\n\t\t\t\t}\n\t\t\t},\n\n\n\t\t\tlerpToHash () {\n\t\t\t\tthis.features.forEach((f, i) => f.value = f.value * this.lerpFactor + this.hashLatents[i] * (1 - this.lerpFactor));\n\t\t\t},\n\n\n\t\t\tupdateHashLatents() {\n\t\t\t\tif (this.latentsBytes) {\n\t\t\t\t\tconst lvec = LatentCode.decodeFloat32(this.latentsBytes);\n\t\t\t\t\tthis.hashLatents = this.fromW ? lvec : LatentCode.normalize(lvec);\n\t\t\t\t}\n\t\t\t\telse\n\t\t\t\t\tthis.hashLatents = null;\n\t\t\t},\n\n\n\t\t\tcopyLatentCode() {\n\t\t\t\tnavigator.clipboard.writeText(this.latentsURL);\n\t\t\t\tconsole.log(\"Latent code copied into clipboard.\");\n\n\t\t\t\tthis.copyActivated = true;\n\t\t\t\tsetTimeout(() => this.copyActivated = false, 100);\n\t\t\t},\n\n\n\t\t\tasync onPaste(event) {\n\t\t\t\t//console.log(\"onPaste:\", [...event.clipboardData.items]);\n\t\t\t\tconst text = await new Promise(resolve => [...event.clipboardData.items][0].getAsString(resolve));\n\t\t\t\t//console.log(\"text:\", text);\n\t\t\t\ttry {\n\t\t\t\t\t// check if text is valid latent code\n\t\t\t\t\t/*const origin = atob(text);\n\t\t\t\t\tif (origin.length !== this.latents_dimensions * 4)\n\t\t\t\t\t\tthrow new Error(\"invalid latent code\");*/\n\t\t\t\t\tif (!/^[\\w+]+:.+$/.test(text))\n\t\t\t\t\t\tthrow new Error(\"invalid latent code\");\n\n\t\t\t\t\tthis.latentsURL = text;\n\t\t\t\t}\n\t\t\t\tcatch (error) {\n\t\t\t\t\tconsole.warn(\"latent code paste failed:\", error);\n\t\t\t\t}\n\t\t\t},\n\n\n\t\t\tfeatureNormalFactor() {\n\t\t\t\treturn featureNormalFactor;\n\t\t\t},\n\n\n\t\t\tasync convertFromZToW () {\n\t\t\t\tthis.latentsBytes = await (await fetch(`/map-z-w?psi=${this.psi}&z=${encodeURIComponent(this.latentsBytes)}`)).text();\n\t\t\t\tthis.fromW = true;\n\t\t\t\tthis.extendFeature = false;\n\t\t\t},\n \t\t\tonChange(event) {\n           \t \tconsole.log(event.target.value)\n\t\t\t\tswitchLatentDirections()\n       \t\t},\n\t\t\tasync switchLatentDirections () {\n\t\t\t\ttest = await (await fetch(`/change?direction=${this.selectedDirection}`)).text();\n\t\t\t\tconsole.log(\"test:\",test)\n\t\t\t},\n\t\t},\n\n\n\t\twatch: {\n\t\t\timageURL () {\n\t\t\t\tthis.loading = true;\n\t\t\t},\n\n\n\t\t\tfromW (value) {\n\t\t\t\tfeatureNormalFactor = value ? 12 : 0.6;\n\n\t\t\t\tthis.updateHashLatents();\n\t\t\t},\n\n\n\t\t\t/*extendFeature (value) {\n\t\t\t\t// set featuresEX value by tiling features' value\n\t\t\t\tif (value)\n\t\t\t\t\tthis.featuresEx.forEach((feature, i) => feature.value = this.features[i % this.features.length].value);\n\t\t\t},*/\n\t\t},\n\t};\n</script>\n\n<style src=\"./common.css\"></style>\n<style>\n\tbody\n\t{\n\t\twhite-space: nowrap;\n\t}\n\n\theader\n\t{\n\t\theight: 2em;\n\t\tmargin: 20px 0;\n\t}\n\n\theader h2\n\t{\n\t\tdisplay: inline;\n\t}\n\n\t.latant-type\n\t{\n\t\tborder: 0;\n\t\tfont-weight: bold;\n\t\t-webkit-appearance: none;\n\t\tcursor: pointer;\n\t}\n\n\t/*.latant-type:hover\n\t{\n\t\t-webkit-appearance: menulist;\n\t}*/\n\n\taside, article\n\t{\n\t\tdisplay: inline-block;\n\t\tvertical-align: top;\n\t\theight: calc(100vh - 72px);\n\t}\n\n\taside\n\t{\n\t\toverflow-y: auto;\n\t\tfont-size: 9px;\n\t}\n\n\taside > *\n\t{\n\t\tpadding-left: 3em;\n\t}\n\n\taside .layer\n\t{\n\t\tposition: absolute;\n\t\ttop: 54px;\n\t\tleft: 1em;\n\t\tpadding-left: 0;\n\t}\n\n\t.disabled\n\t{\n\t\tcolor: #0006;\n\t}\n\n\t.feature-bar, aside .scales\n\t{\n\t\twidth: 240px;\n\t}\n\n\t.model\n\t{\n\t\tfont-size: 20px;\n\t\tfont-weight: bold;\n\t\tmargin: 0 1em;\n\t}\n\n\t.result\n\t{\n\t\theight: 100%;\n\t\twidth: auto;\n\t}\n\n\t.value\n\t{\n\t\tborder: 0;\n\t\twidth: 4.1em;\n\t}\n\n\t.loading img\n\t{\n\t\topacity: 0.7;\n\t}\n\n\t.scales > span\n\t{\n\t\tposition: absolute;\n\t\ttext-align: center;\n\t\ttransform: translateX(-50%);\n\t\tpointer-events: none;\n\t}\n\n\t.psi-bar\n\t{\n\t\tdisplay: inline-block;\n\t\twidth: 600px;\n\t\tposition: relative;\n\t}\n\n\t.psi-bar input\n\t{\n\t\twidth: 100%;\n\t}\n\n\t.psi-bar .scales > span\n\t{\n\t\tfont-size: 9px;\n\t\tbottom: -8px;\n\t\tcolor: #ccc;\n\t}\n\n\taside .scales\n\t{\n\t\tposition: absolute;\n\t\tdisplay: inline-block;\n\t\theight: 2em;\n\t\tpointer-events: none;\n\t\tmargin: 0;\n\t\ttransform: translateY(-3em);\n\t\tcolor: #ccc;\n\t}\n\n\t/*.scales .line\n\t{\n\t\ttransform: scale(1000);\n\t}*/\n</style>\n"]}, media: undefined });
 
     };
     /* scoped */
