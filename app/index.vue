@@ -1,10 +1,11 @@
 <template>
 	<div @paste="onPaste" @copy.prevent="copyLatentCode">
 		<header>
-			<h2 v-if="spec" class="model" title="model name">{{spec.model}}</h2>
-			<fieldset>
-                <v-select label="title" v-model="selected" :options="latents_directions"></v-select>
-            </fieldset>
+			<h2 v-if="spec" class="model" title="model name">Model Name:{{spec.model}}</h2>
+			<select v-model="selected">
+				<option disabled value="">Please select one</option>
+				<option v-for="direction in latent_directions" :value="direction">{{direction}}</option>
+			</select>
 			<fieldset>
 				<select v-model="fromW" class="latant-type" :title="`generate from ${fromW ? 'W' : 'Z'}`">
 					<option :value="false">Z</option>
@@ -78,12 +79,7 @@
 					</span>
 				</span>
 			</p>
-			<ol v-if="shownLatentDirections">
-			<li v-for="(direction, index) of shownLatentDirections" :key="index">
-					<input type="range" class="feature-bar" v-model.lazy="direction.normalized" :min="-0.99999999" :max="0.99999999" step="any" />
-					<input class="value" type="number" v-model.number="direction.value" step="0.001" />
-			</li>
-			</ol>
+
 			<ol v-if="shownFeatures">
 				<li v-for="(feature, index) of shownFeatures" :key="index">
 					<input type="range" class="feature-bar" v-model.lazy="feature.normalized" :min="-0.99999999" :max="0.99999999" step="any" />
@@ -161,7 +157,7 @@
 				selected:'',
 				spec: null,
 				latents_dimensions: null,
-				latents_directions: null,
+				latent_directions: null,
 				latentsLayers: 0,
 				features: null,
 				featuresEx: null,
@@ -266,10 +262,7 @@
 				},
 			},
 
-			shownLatentDirections () {
-				return this.latentDirectionEx.slice(this.shownLayer * this.latents_directions, (this.shownLayer + 1) * this.latents_directions);
-			},
-
+			
 			shownFeatures () {
 				if (!this.useXLatents)
 					return this.features;
@@ -365,13 +358,13 @@
 			console.log("model spec:", this.spec);
 
 			this.latents_dimensions = this.spec.latents_dimensions;
-			this.latents_directions = this.spec.latents_directions;
-	
+			this.latent_directions = this.spec.latent_directions;
+			// console.log("this.latent_directions:",this.latent_directions)
 
 			this.latentsLayers = this.spec.synthesis_input_shape[1];
 			// this should be the count of latent directions
-			this.latentDirection = Array(this.spec.latents_directions).fill().map(() => new Feature(0));
-			this.latentDirectionEx = Array(this.spec.latents_directions * this.spec.latents_directions.count).fill().map(() => new Feature(0));
+			// this.latentDirection = Array(this.spec.latent_directions).fill().map(() => new Feature(0));
+			// this.latentDirectionEx = Array(this.spec.latent_directions * this.spec.latent_directions.count).fill().map(() => new Feature(0));
 
 
 			this.initializing = false;

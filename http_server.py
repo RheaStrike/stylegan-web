@@ -181,6 +181,7 @@ def spec():
 	global model_name
 	model, _ = loadGs()
 	latent_directions = get_latent_vector_files()
+	print("latent_directions:",latent_directions)
 	return dict(
 		model = model_name,
 		latents_dimensions = model.input_shape[1],

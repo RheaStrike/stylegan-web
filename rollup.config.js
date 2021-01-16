@@ -25,7 +25,9 @@ export default [
 			"process.env.NODE_ENV": JSON.stringify("development"),
 			"process.env.VUE_ENV": JSON.stringify("browser"),
 		}),
-		commonjs(),
+		commonjs({
+			exclude: ['node_modules/face-api.js/build/es6/env/isNodejs.js'],
+		 }),
 		resolve({
 			preferBuiltins: false,
 			browser: true,

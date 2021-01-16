@@ -8430,107 +8430,117 @@
     }, 0);
   }
 
-  var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+  //
+  //
+  //
+  //
+  //
 
-  function unwrapExports (x) {
-  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-  }
+  //import {randn_bm} from "./latentCode.js";
 
-  function createCommonjsModule(fn, module) {
-  	return module = { exports: {} }, fn(module, module.exports), module.exports;
-  }
 
-  var vueSelect = createCommonjsModule(function (module, exports) {
-  !function(t,e){module.exports=e();}("undefined"!=typeof self?self:commonjsGlobal,(function(){return function(t){var e={};function n(o){if(e[o])return e[o].exports;var i=e[o]={i:o,l:!1,exports:{}};return t[o].call(i.exports,i,i.exports,n),i.l=!0,i.exports}return n.m=t,n.c=e,n.d=function(t,e,o){n.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:o});},n.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0});},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var o=Object.create(null);if(n.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var i in t)n.d(o,i,function(e){return t[e]}.bind(null,i));return o},n.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.p="/",n(n.s=8)}([function(t,e,n){var o=n(4),i=n(5),s=n(6);t.exports=function(t){return o(t)||i(t)||s()};},function(t,e){function n(e){return "function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?t.exports=n=function(t){return typeof t}:t.exports=n=function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},n(e)}t.exports=n;},function(t,e,n){},function(t,e){t.exports=function(t,e,n){return e in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t};},function(t,e){t.exports=function(t){if(Array.isArray(t)){for(var e=0,n=new Array(t.length);e<t.length;e++)n[e]=t[e];return n}};},function(t,e){t.exports=function(t){if(Symbol.iterator in Object(t)||"[object Arguments]"===Object.prototype.toString.call(t))return Array.from(t)};},function(t,e){t.exports=function(){throw new TypeError("Invalid attempt to spread non-iterable instance")};},function(t,e,n){var o=n(2);n.n(o).a;},function(t,e,n){n.r(e);var o=n(0),i=n.n(o),s=n(1),r=n.n(s),a=n(3),l=n.n(a),c={props:{autoscroll:{type:Boolean,default:!0}},watch:{typeAheadPointer:function(){this.autoscroll&&this.maybeAdjustScroll();}},methods:{maybeAdjustScroll:function(){var t,e=(null===(t=this.$refs.dropdownMenu)||void 0===t?void 0:t.children[this.typeAheadPointer])||!1;if(e){var n=this.getDropdownViewport(),o=e.getBoundingClientRect(),i=o.top,s=o.bottom,r=o.height;if(i<n.top)return this.$refs.dropdownMenu.scrollTop=e.offsetTop;if(s>n.bottom)return this.$refs.dropdownMenu.scrollTop=e.offsetTop-(n.height-r)}},getDropdownViewport:function(){return this.$refs.dropdownMenu?this.$refs.dropdownMenu.getBoundingClientRect():{height:0,top:0,bottom:0}}}},u={data:function(){return {typeAheadPointer:-1}},watch:{filteredOptions:function(){for(var t=0;t<this.filteredOptions.length;t++)if(this.selectable(this.filteredOptions[t])){this.typeAheadPointer=t;break}}},methods:{typeAheadUp:function(){for(var t=this.typeAheadPointer-1;t>=0;t--)if(this.selectable(this.filteredOptions[t])){this.typeAheadPointer=t;break}},typeAheadDown:function(){for(var t=this.typeAheadPointer+1;t<this.filteredOptions.length;t++)if(this.selectable(this.filteredOptions[t])){this.typeAheadPointer=t;break}},typeAheadSelect:function(){var t=this.filteredOptions[this.typeAheadPointer];t&&this.select(t);}}},p={props:{loading:{type:Boolean,default:!1}},data:function(){return {mutableLoading:!1}},watch:{search:function(){this.$emit("search",this.search,this.toggleLoading);},loading:function(t){this.mutableLoading=t;}},methods:{toggleLoading:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null;return this.mutableLoading=null==t?!this.mutableLoading:t}}};function h(t,e,n,o,i,s,r,a){var l,c="function"==typeof t?t.options:t;if(e&&(c.render=e,c.staticRenderFns=n,c._compiled=!0),o&&(c.functional=!0),s&&(c._scopeId="data-v-"+s),r?(l=function(t){(t=t||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext)||"undefined"==typeof __VUE_SSR_CONTEXT__||(t=__VUE_SSR_CONTEXT__),i&&i.call(this,t),t&&t._registeredComponents&&t._registeredComponents.add(r);},c._ssrRegister=l):i&&(l=a?function(){i.call(this,this.$root.$options.shadowRoot);}:i),l)if(c.functional){c._injectStyles=l;var u=c.render;c.render=function(t,e){return l.call(e),u(t,e)};}else {var p=c.beforeCreate;c.beforeCreate=p?[].concat(p,l):[l];}return {exports:t,options:c}}var d={Deselect:h({},(function(){var t=this.$createElement,e=this._self._c||t;return e("svg",{attrs:{xmlns:"http://www.w3.org/2000/svg",width:"10",height:"10"}},[e("path",{attrs:{d:"M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"}})])}),[],!1,null,null,null).exports,OpenIndicator:h({},(function(){var t=this.$createElement,e=this._self._c||t;return e("svg",{attrs:{xmlns:"http://www.w3.org/2000/svg",width:"14",height:"10"}},[e("path",{attrs:{d:"M9.211364 7.59931l4.48338-4.867229c.407008-.441854.407008-1.158247 0-1.60046l-.73712-.80023c-.407008-.441854-1.066904-.441854-1.474243 0L7 5.198617 2.51662.33139c-.407008-.441853-1.066904-.441853-1.474243 0l-.737121.80023c-.407008.441854-.407008 1.158248 0 1.600461l4.48338 4.867228L7 10l2.211364-2.40069z"}})])}),[],!1,null,null,null).exports},f={inserted:function(t,e,n){var o=n.context;if(o.appendToBody){var i=o.$refs.toggle.getBoundingClientRect(),s=i.height,r=i.top,a=i.left,l=i.width,c=window.scrollX||window.pageXOffset,u=window.scrollY||window.pageYOffset;t.unbindPosition=o.calculatePosition(t,o,{width:l+"px",left:c+a+"px",top:u+r+s+"px"}),document.body.appendChild(t);}},unbind:function(t,e,n){n.context.appendToBody&&(t.unbindPosition&&"function"==typeof t.unbindPosition&&t.unbindPosition(),t.parentNode&&t.parentNode.removeChild(t));}};var y=function(t){var e={};return Object.keys(t).sort().forEach((function(n){e[n]=t[n];})),JSON.stringify(e)},b=0;var g=function(){return ++b};function v(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var o=Object.getOwnPropertySymbols(t);e&&(o=o.filter((function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))),n.push.apply(n,o);}return n}function m(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?v(Object(n),!0).forEach((function(e){l()(t,e,n[e]);})):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):v(Object(n)).forEach((function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e));}));}return t}var _={components:m({},d),mixins:[c,u,p],directives:{appendToBody:f},props:{value:{},components:{type:Object,default:function(){return {}}},options:{type:Array,default:function(){return []}},disabled:{type:Boolean,default:!1},clearable:{type:Boolean,default:!0},searchable:{type:Boolean,default:!0},multiple:{type:Boolean,default:!1},placeholder:{type:String,default:""},transition:{type:String,default:"vs__fade"},clearSearchOnSelect:{type:Boolean,default:!0},closeOnSelect:{type:Boolean,default:!0},label:{type:String,default:"label"},autocomplete:{type:String,default:"off"},reduce:{type:Function,default:function(t){return t}},selectable:{type:Function,default:function(t){return !0}},getOptionLabel:{type:Function,default:function(t){return "object"===r()(t)?t.hasOwnProperty(this.label)?t[this.label]:console.warn('[vue-select warn]: Label key "option.'.concat(this.label,'" does not')+" exist in options object ".concat(JSON.stringify(t),".\n")+"https://vue-select.org/api/props.html#getoptionlabel"):t}},getOptionKey:{type:Function,default:function(t){if("object"!==r()(t))return t;try{return t.hasOwnProperty("id")?t.id:y(t)}catch(e){return console.warn("[vue-select warn]: Could not stringify this option to generate unique key. Please provide'getOptionKey' prop to return a unique key for each option.\nhttps://vue-select.org/api/props.html#getoptionkey",t,e)}}},onTab:{type:Function,default:function(){this.selectOnTab&&!this.isComposing&&this.typeAheadSelect();}},taggable:{type:Boolean,default:!1},tabindex:{type:Number,default:null},pushTags:{type:Boolean,default:!1},filterable:{type:Boolean,default:!0},filterBy:{type:Function,default:function(t,e,n){return (e||"").toLowerCase().indexOf(n.toLowerCase())>-1}},filter:{type:Function,default:function(t,e){var n=this;return t.filter((function(t){var o=n.getOptionLabel(t);return "number"==typeof o&&(o=o.toString()),n.filterBy(t,o,e)}))}},createOption:{type:Function,default:function(t){return "object"===r()(this.optionList[0])?l()({},this.label,t):t}},resetOnOptionsChange:{default:!1,validator:function(t){return ["function","boolean"].includes(r()(t))}},clearSearchOnBlur:{type:Function,default:function(t){var e=t.clearSearchOnSelect,n=t.multiple;return e&&!n}},noDrop:{type:Boolean,default:!1},inputId:{type:String},dir:{type:String,default:"auto"},selectOnTab:{type:Boolean,default:!1},selectOnKeyCodes:{type:Array,default:function(){return [13]}},searchInputQuerySelector:{type:String,default:"[type=search]"},mapKeydown:{type:Function,default:function(t,e){return t}},appendToBody:{type:Boolean,default:!1},calculatePosition:{type:Function,default:function(t,e,n){var o=n.width,i=n.top,s=n.left;t.style.top=i,t.style.left=s,t.style.width=o;}}},data:function(){return {uid:g(),search:"",open:!1,isComposing:!1,pushedTags:[],_value:[]}},watch:{options:function(t,e){var n=this;!this.taggable&&("function"==typeof n.resetOnOptionsChange?n.resetOnOptionsChange(t,e,n.selectedValue):n.resetOnOptionsChange)&&this.clearSelection(),this.value&&this.isTrackingValues&&this.setInternalValueFromOptions(this.value);},value:function(t){this.isTrackingValues&&this.setInternalValueFromOptions(t);},multiple:function(){this.clearSelection();},open:function(t){this.$emit(t?"open":"close");}},created:function(){this.mutableLoading=this.loading,void 0!==this.value&&this.isTrackingValues&&this.setInternalValueFromOptions(this.value),this.$on("option:created",this.pushTag);},methods:{setInternalValueFromOptions:function(t){var e=this;Array.isArray(t)?this.$data._value=t.map((function(t){return e.findOptionFromReducedValue(t)})):this.$data._value=this.findOptionFromReducedValue(t);},select:function(t){this.$emit("option:selecting",t),this.isOptionSelected(t)||(this.taggable&&!this.optionExists(t)&&this.$emit("option:created",t),this.multiple&&(t=this.selectedValue.concat(t)),this.updateValue(t),this.$emit("option:selected",t)),this.onAfterSelect(t);},deselect:function(t){var e=this;this.$emit("option:deselecting",t),this.updateValue(this.selectedValue.filter((function(n){return !e.optionComparator(n,t)}))),this.$emit("option:deselected",t);},clearSelection:function(){this.updateValue(this.multiple?[]:null);},onAfterSelect:function(t){this.closeOnSelect&&(this.open=!this.open,this.searchEl.blur()),this.clearSearchOnSelect&&(this.search="");},updateValue:function(t){var e=this;void 0===this.value&&(this.$data._value=t),null!==t&&(t=Array.isArray(t)?t.map((function(t){return e.reduce(t)})):this.reduce(t)),this.$emit("input",t);},toggleDropdown:function(t){var e=t.target!==this.searchEl;e&&t.preventDefault();var n=[].concat(i()(this.$refs.deselectButtons||[]),i()([this.$refs.clearButton]||!1));void 0===this.searchEl||n.filter(Boolean).some((function(e){return e.contains(t.target)||e===t.target}))?t.preventDefault():this.open&&e?this.searchEl.blur():this.disabled||(this.open=!0,this.searchEl.focus());},isOptionSelected:function(t){var e=this;return this.selectedValue.some((function(n){return e.optionComparator(n,t)}))},optionComparator:function(t,e){return this.getOptionKey(t)===this.getOptionKey(e)},findOptionFromReducedValue:function(t){var e=this,n=[].concat(i()(this.options),i()(this.pushedTags)).filter((function(n){return JSON.stringify(e.reduce(n))===JSON.stringify(t)}));return 1===n.length?n[0]:n.find((function(t){return e.optionComparator(t,e.$data._value)}))||t},closeSearchOptions:function(){this.open=!1,this.$emit("search:blur");},maybeDeleteValue:function(){if(!this.searchEl.value.length&&this.selectedValue&&this.selectedValue.length&&this.clearable){var t=null;this.multiple&&(t=i()(this.selectedValue.slice(0,this.selectedValue.length-1))),this.updateValue(t);}},optionExists:function(t){var e=this;return this.optionList.some((function(n){return e.optionComparator(n,t)}))},normalizeOptionForSlot:function(t){return "object"===r()(t)?t:l()({},this.label,t)},pushTag:function(t){this.pushedTags.push(t);},onEscape:function(){this.search.length?this.search="":this.searchEl.blur();},onSearchBlur:function(){if(!this.mousedown||this.searching){var t=this.clearSearchOnSelect,e=this.multiple;return this.clearSearchOnBlur({clearSearchOnSelect:t,multiple:e})&&(this.search=""),void this.closeSearchOptions()}this.mousedown=!1,0!==this.search.length||0!==this.options.length||this.closeSearchOptions();},onSearchFocus:function(){this.open=!0,this.$emit("search:focus");},onMousedown:function(){this.mousedown=!0;},onMouseUp:function(){this.mousedown=!1;},onSearchKeyDown:function(t){var e=this,n=function(t){return t.preventDefault(),!e.isComposing&&e.typeAheadSelect()},o={8:function(t){return e.maybeDeleteValue()},9:function(t){return e.onTab()},27:function(t){return e.onEscape()},38:function(t){return t.preventDefault(),e.typeAheadUp()},40:function(t){return t.preventDefault(),e.typeAheadDown()}};this.selectOnKeyCodes.forEach((function(t){return o[t]=n}));var i=this.mapKeydown(o,this);if("function"==typeof i[t.keyCode])return i[t.keyCode](t)}},computed:{isTrackingValues:function(){return void 0===this.value||this.$options.propsData.hasOwnProperty("reduce")},selectedValue:function(){var t=this.value;return this.isTrackingValues&&(t=this.$data._value),t?[].concat(t):[]},optionList:function(){return this.options.concat(this.pushTags?this.pushedTags:[])},searchEl:function(){return this.$scopedSlots.search?this.$refs.selectedOptions.querySelector(this.searchInputQuerySelector):this.$refs.search},scope:function(){var t=this,e={search:this.search,loading:this.loading,searching:this.searching,filteredOptions:this.filteredOptions};return {search:{attributes:m({disabled:this.disabled,placeholder:this.searchPlaceholder,tabindex:this.tabindex,readonly:!this.searchable,id:this.inputId,"aria-autocomplete":"list","aria-labelledby":"vs".concat(this.uid,"__combobox"),"aria-controls":"vs".concat(this.uid,"__listbox"),ref:"search",type:"search",autocomplete:this.autocomplete,value:this.search},this.dropdownOpen&&this.filteredOptions[this.typeAheadPointer]?{"aria-activedescendant":"vs".concat(this.uid,"__option-").concat(this.typeAheadPointer)}:{}),events:{compositionstart:function(){return t.isComposing=!0},compositionend:function(){return t.isComposing=!1},keydown:this.onSearchKeyDown,blur:this.onSearchBlur,focus:this.onSearchFocus,input:function(e){return t.search=e.target.value}}},spinner:{loading:this.mutableLoading},noOptions:{search:this.search,loading:this.loading,searching:this.searching},openIndicator:{attributes:{ref:"openIndicator",role:"presentation",class:"vs__open-indicator"}},listHeader:e,listFooter:e,header:m({},e,{deselect:this.deselect}),footer:m({},e,{deselect:this.deselect})}},childComponents:function(){return m({},d,{},this.components)},stateClasses:function(){return {"vs--open":this.dropdownOpen,"vs--single":!this.multiple,"vs--searching":this.searching&&!this.noDrop,"vs--searchable":this.searchable&&!this.noDrop,"vs--unsearchable":!this.searchable,"vs--loading":this.mutableLoading,"vs--disabled":this.disabled}},searching:function(){return !!this.search},dropdownOpen:function(){return !this.noDrop&&(this.open&&!this.mutableLoading)},searchPlaceholder:function(){if(this.isValueEmpty&&this.placeholder)return this.placeholder},filteredOptions:function(){var t=[].concat(this.optionList);if(!this.filterable&&!this.taggable)return t;var e=this.search.length?this.filter(t,this.search,this):t;if(this.taggable&&this.search.length){var n=this.createOption(this.search);this.optionExists(n)||e.unshift(n);}return e},isValueEmpty:function(){return 0===this.selectedValue.length},showClearButton:function(){return !this.multiple&&this.clearable&&!this.open&&!this.isValueEmpty}}},O=(n(7),h(_,(function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("div",{staticClass:"v-select",class:t.stateClasses,attrs:{dir:t.dir}},[t._t("header",null,null,t.scope.header),t._v(" "),n("div",{ref:"toggle",staticClass:"vs__dropdown-toggle",attrs:{id:"vs"+t.uid+"__combobox",role:"combobox","aria-expanded":t.dropdownOpen.toString(),"aria-owns":"vs"+t.uid+"__listbox","aria-label":"Search for option"},on:{mousedown:function(e){return t.toggleDropdown(e)}}},[n("div",{ref:"selectedOptions",staticClass:"vs__selected-options"},[t._l(t.selectedValue,(function(e){return t._t("selected-option-container",[n("span",{key:t.getOptionKey(e),staticClass:"vs__selected"},[t._t("selected-option",[t._v("\n            "+t._s(t.getOptionLabel(e))+"\n          ")],null,t.normalizeOptionForSlot(e)),t._v(" "),t.multiple?n("button",{ref:"deselectButtons",refInFor:!0,staticClass:"vs__deselect",attrs:{disabled:t.disabled,type:"button",title:"Deselect "+t.getOptionLabel(e),"aria-label":"Deselect "+t.getOptionLabel(e)},on:{click:function(n){return t.deselect(e)}}},[n(t.childComponents.Deselect,{tag:"component"})],1):t._e()],2)],{option:t.normalizeOptionForSlot(e),deselect:t.deselect,multiple:t.multiple,disabled:t.disabled})})),t._v(" "),t._t("search",[n("input",t._g(t._b({staticClass:"vs__search"},"input",t.scope.search.attributes,!1),t.scope.search.events))],null,t.scope.search)],2),t._v(" "),n("div",{ref:"actions",staticClass:"vs__actions"},[n("button",{directives:[{name:"show",rawName:"v-show",value:t.showClearButton,expression:"showClearButton"}],ref:"clearButton",staticClass:"vs__clear",attrs:{disabled:t.disabled,type:"button",title:"Clear Selected","aria-label":"Clear Selected"},on:{click:t.clearSelection}},[n(t.childComponents.Deselect,{tag:"component"})],1),t._v(" "),t._t("open-indicator",[t.noDrop?t._e():n(t.childComponents.OpenIndicator,t._b({tag:"component"},"component",t.scope.openIndicator.attributes,!1))],null,t.scope.openIndicator),t._v(" "),t._t("spinner",[n("div",{directives:[{name:"show",rawName:"v-show",value:t.mutableLoading,expression:"mutableLoading"}],staticClass:"vs__spinner"},[t._v("Loading...")])],null,t.scope.spinner)],2)]),t._v(" "),n("transition",{attrs:{name:t.transition}},[t.dropdownOpen?n("ul",{directives:[{name:"append-to-body",rawName:"v-append-to-body"}],key:"vs"+t.uid+"__listbox",ref:"dropdownMenu",staticClass:"vs__dropdown-menu",attrs:{id:"vs"+t.uid+"__listbox",role:"listbox",tabindex:"-1"},on:{mousedown:function(e){return e.preventDefault(),t.onMousedown(e)},mouseup:t.onMouseUp}},[t._t("list-header",null,null,t.scope.listHeader),t._v(" "),t._l(t.filteredOptions,(function(e,o){return n("li",{key:t.getOptionKey(e),staticClass:"vs__dropdown-option",class:{"vs__dropdown-option--selected":t.isOptionSelected(e),"vs__dropdown-option--highlight":o===t.typeAheadPointer,"vs__dropdown-option--disabled":!t.selectable(e)},attrs:{role:"option",id:"vs"+t.uid+"__option-"+o,"aria-selected":o===t.typeAheadPointer||null},on:{mouseover:function(n){t.selectable(e)&&(t.typeAheadPointer=o);},mousedown:function(n){n.preventDefault(),n.stopPropagation(),t.selectable(e)&&t.select(e);}}},[t._t("option",[t._v("\n          "+t._s(t.getOptionLabel(e))+"\n        ")],null,t.normalizeOptionForSlot(e))],2)})),t._v(" "),0===t.filteredOptions.length?n("li",{staticClass:"vs__no-options"},[t._t("no-options",[t._v("Sorry, no matching options.")],null,t.scope.noOptions)],2):t._e(),t._v(" "),t._t("list-footer",null,null,t.scope.listFooter)],2):n("ul",{staticStyle:{display:"none",visibility:"hidden"},attrs:{id:"vs"+t.uid+"__listbox",role:"listbox"}})]),t._v(" "),t._t("footer",null,null,t.scope.footer)],2)}),[],!1,null,null,null).exports),w={ajax:p,pointer:u,pointerScroll:c};n.d(e,"VueSelect",(function(){return O})),n.d(e,"mixins",(function(){return w}));e.default=O;}])}));
-
-  });
-
-  var vSelect = unwrapExports(vueSelect);
-  var vueSelect_1 = vueSelect.VueSelect;
-
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
 
   var script = {
-  	name: "store-input",
+  	name: "circle-plot",
 
 
   	props: {
-  		type: {
+  		layout: {
+  			type: Object,
+  			default: () => ({
+  				width: 1200,
+  				height: 800,
+  			}),
+  		},
+  		center: Float32Array,
+  		circle: Array,
+  		mode: {
   			type: String,
-  			default: "text",
+  			default: "3d",
   		},
-
-  		value: {
-  			validator () {return true;},
-  		},
-
-  		range: Object,
-
-  		styleObj: Object,
-
-  		placeholder: String,
-
-  		localKey: String,
-  		sessionKey: String,
-
-  		disabled: Boolean,
   	},
 
 
-  	computed: {
-  		innerValue: {
-  			get () {
-  				return this.value;
-  			},
+  	/*data () {
+  		return {
+  			normal: this.center.map(() => randn_bm()),
+  		};
+  	},*/
 
-  			set (value) {
-  				this.$emit("input", value);
-  			},
+
+  	computed: {
+  		normalPoints () {
+  			if (!this.circle)
+  				return null;
+
+  			return this.circle.map(p => {
+  				const v = Array.from(p).map((x, i) => x - this.center[i]);
+
+  				return v;
+  			});
   		},
   	},
 
 
   	created () {
-  		this.load();
+  		console.assert(window.Plotly, "plotly is required.");
+  	},
+
+
+  	mounted () {
+  		this.updatePlot();
   	},
 
 
   	methods: {
-  		load () {
-  			if (this.localKey && localStorage[`storeInput-${this.localKey}`])
-  				this.innerValue = JSON.parse(localStorage[`storeInput-${this.localKey}`]);
+  		updatePlot () {
+  			const points = [...this.normalPoints, this.normalPoints[0]];	// close the cycle
+  			const color = points.map((_, i) => i);
+  			const marker = {
+  				size: 3.5,
+  				color,
+  				colorscale: "Greens",
+  				cmin: -20,
+  				cmax: 50,
+  			};
 
-  			if (this.sessionKey && sessionStorage[`storeInput-${this.sessionKey}`])
-  				this.innerValue = JSON.parse(sessionStorage[`storeInput-${this.sessionKey}`]);
-  		},
+  			const data = this.mode === "2d" ? Array(256).fill().map((_, i) => ({
+  				type: "scatter3d",
+  				mode: "lines+markers",
+  				x: points.map(v => v[i * 2]),
+  				y: points.map(v => v[i * 2 + 1]),
+  				z: points.map(_ => 0),
+  				line: {
+  					width: 6,
+  					color,
+  					//colorscale: "Viridis",
+  				},
+  				marker,
+  			}))
+  			: Array(170).fill().map((_, i) => ({
+  				type: "scatter3d",
+  				mode: "lines+markers",
+  				x: points.map(v => v[i * 3]),
+  				y: points.map(v => v[i * 3 + 1]),
+  				z: points.map(v => v[i * 3 + 2]),
+  				line: {
+  					width: 6,
+  					color,
+  					//colorscale: "Viridis",
+  				},
+  				marker,
+  			}));
 
-
-  		save () {
-  			if (this.localKey)
-  				localStorage[`storeInput-${this.localKey}`] = JSON.stringify(this.value);
-
-  			if (this.sessionKey)
-  				sessionStorage[`storeInput-${this.sessionKey}`] = JSON.stringify(this.value);
+  			Plotly.newPlot(this.$el, data, {
+  				margin: {l: 0, r: 0, t: 0, b: 0},
+  				...this.layout,
+  			});
   		},
   	},
 
 
   	watch: {
-  		value: "save",
+  		normalPoints: "updatePlot",
   	},
   };
 
@@ -8619,6 +8629,133 @@
 
   var normalizeComponent_1 = normalizeComponent;
 
+  /* script */
+  const __vue_script__ = script;
+
+  /* template */
+  var __vue_render__ = function() {
+    var _vm = this;
+    var _h = _vm.$createElement;
+    var _c = _vm._self._c || _h;
+    return _c("div")
+  };
+  var __vue_staticRenderFns__ = [];
+  __vue_render__._withStripped = true;
+
+    /* style */
+    const __vue_inject_styles__ = undefined;
+    /* scoped */
+    const __vue_scope_id__ = undefined;
+    /* module identifier */
+    const __vue_module_identifier__ = undefined;
+    /* functional template */
+    const __vue_is_functional_template__ = false;
+    /* style inject */
+    
+    /* style inject SSR */
+    
+
+    
+    var CirclePlot = normalizeComponent_1(
+      { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
+      __vue_inject_styles__,
+      __vue_script__,
+      __vue_scope_id__,
+      __vue_is_functional_template__,
+      __vue_module_identifier__,
+      undefined,
+      undefined
+    );
+
+  function randn_bm() {
+  	const u = 1 - Math.random();
+  	const v = 1 - Math.random();
+  	return Math.sqrt( -2 * Math.log( u ) ) * Math.cos( 2 * Math.PI * v );
+  }
+
+
+  function encodeFloat32 (vector) {
+  	return btoa(String.fromCharCode.apply(null, new Uint8Array(new Float32Array(vector).buffer)));
+  }
+
+
+  function decodeFloat32 (code) {
+  	const str = atob(decodeURIComponent(code));
+  	const uint8 = str.split("").map(c => c.charCodeAt(0));
+  	return new Float32Array(new Uint8Array(uint8).buffer);
+  }
+
+  //
+
+
+
+  var script$1 = {
+  	name: "vector-input",
+
+
+  	props: {
+  		dimension: {
+  			type: Number,
+  			default: 512,
+  		},
+  	},
+
+
+  	data () {
+  		return {
+  			vector: new Float32Array(this.dimension),
+  			activated: false,
+  		};
+  	},
+
+
+  	computed: {
+  		vectorText () {
+  			return Array.from(this.vector).map(v => v.toPrecision(4)).join(",");
+  		},
+
+
+  		latentsBytes: {
+  			get () {
+  				return encodeFloat32(this.vector);
+  			},
+
+  			set (value) {
+  				this.vector = decodeFloat32(value);
+  			},
+  		},
+  	},
+
+
+  	created () {
+  		this.randomize();
+  	},
+
+
+  	methods: {
+  		async onPaste (event) {
+  			const text = await new Promise(resolve => [...event.clipboardData.items][0].getAsString(resolve));
+  			//console.log("pasted:", text);
+  			const [code] = text.match(/[^,]+$/);
+  			this.latentsBytes = code;
+  		},
+
+
+  		onCopy () {
+  			event.clipboardData.setData("text/plain", "z:1," + this.latentsBytes);
+  			console.log("Latent code copied into clipboard.");
+
+  			this.activated = true;
+  			setTimeout(() => this.activated = false, 100);
+  		},
+
+
+  		randomize () {
+  			this.vector = this.vector.map(() => randn_bm());
+  		},
+  	},
+  };
+
   var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
   function createInjector(context) {
     return function (id, style) {
@@ -8670,10 +8807,160 @@
   var browser = createInjector;
 
   /* script */
-  const __vue_script__ = script;
+  const __vue_script__$1 = script$1;
 
   /* template */
-  var __vue_render__ = function() {
+  var __vue_render__$1 = function() {
+    var _vm = this;
+    var _h = _vm.$createElement;
+    var _c = _vm._self._c || _h;
+    return _c("span", { staticClass: "vector-input" }, [
+      _c("textarea", {
+        class: { "note-box": true, activated: _vm.activated },
+        attrs: { readonly: true },
+        domProps: { value: _vm.vectorText },
+        on: {
+          paste: _vm.onPaste,
+          copy: function($event) {
+            $event.preventDefault();
+            return _vm.onCopy($event)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "icon",
+          attrs: { title: "randomize" },
+          on: { click: _vm.randomize }
+        },
+        [_vm._v("🎲")]
+      )
+    ])
+  };
+  var __vue_staticRenderFns__$1 = [];
+  __vue_render__$1._withStripped = true;
+
+    /* style */
+    const __vue_inject_styles__$1 = function (inject) {
+      if (!inject) return
+      inject("data-v-7c3f941a_0", { source: "\nhtml\n{\n\toverflow: hidden;\n\tfont-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}\nheader fieldset\n{\n\tdisplay: inline-block;\n\tmargin: 0 .6em;\n\tborder: 0;\n\tpadding: 0;\n}\n.initializing\n{\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\tbottom: 0;\n\tright: 0;\n\tfont-size: 10vh;\n\tpadding: 30vh 2em 0;\n\twhite-space: normal;\n\tbackground-color: #ccca;\n\tcolor: #444c;\n}\n.note-box\n{\n\ttransition: outline-color .6s ease-out;\n\toutline: 4px transparent solid;\n}\n.note-box.activated\n{\n\toutline-color: #0f6;\n\ttransition: outline-color .01s;\n}\nbutton.icon\n{\n\tbackground: transparent;\n\tborder: 0;\n\tcursor: pointer;\n}\nbutton.icon:hover\n{\n\ttransform: scale(1.1);\n}\n", map: undefined, media: undefined })
+  ,inject("data-v-7c3f941a_1", { source: "\n.vector-input > *[data-v-7c3f941a]\n{\n\tvertical-align: middle;\n}\n", map: {"version":3,"sources":["/home/jp/Documents/stylegan-web/app/vectorInput.vue"],"names":[],"mappings":";AAkFA;;CAEA,sBAAA;AACA","file":"vectorInput.vue","sourcesContent":["<template>\n\t<span class=\"vector-input\">\n\t\t<textarea :value=\"vectorText\" :readonly=\"true\" @paste=\"onPaste\" @copy.prevent=\"onCopy\" :class=\"{'note-box': true, activated}\" />\n\t\t<button @click=\"randomize\" class=\"icon\" title=\"randomize\">&#x1f3b2;</button>\n\t</span>\n</template>\n\n<script>\n\timport * as LatentCode from \"./latentCode.js\"\n\n\n\n\texport default {\n\t\tname: \"vector-input\",\n\n\n\t\tprops: {\n\t\t\tdimension: {\n\t\t\t\ttype: Number,\n\t\t\t\tdefault: 512,\n\t\t\t},\n\t\t},\n\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\tvector: new Float32Array(this.dimension),\n\t\t\t\tactivated: false,\n\t\t\t};\n\t\t},\n\n\n\t\tcomputed: {\n\t\t\tvectorText () {\n\t\t\t\treturn Array.from(this.vector).map(v => v.toPrecision(4)).join(\",\");\n\t\t\t},\n\n\n\t\t\tlatentsBytes: {\n\t\t\t\tget () {\n\t\t\t\t\treturn LatentCode.encodeFloat32(this.vector);\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tthis.vector = LatentCode.decodeFloat32(value);\n\t\t\t\t},\n\t\t\t},\n\t\t},\n\n\n\t\tcreated () {\n\t\t\tthis.randomize();\n\t\t},\n\n\n\t\tmethods: {\n\t\t\tasync onPaste (event) {\n\t\t\t\tconst text = await new Promise(resolve => [...event.clipboardData.items][0].getAsString(resolve));\n\t\t\t\t//console.log(\"pasted:\", text);\n\t\t\t\tconst [code] = text.match(/[^,]+$/);\n\t\t\t\tthis.latentsBytes = code;\n\t\t\t},\n\n\n\t\t\tonCopy () {\n\t\t\t\tevent.clipboardData.setData(\"text/plain\", \"z:1,\" + this.latentsBytes);\n\t\t\t\tconsole.log(\"Latent code copied into clipboard.\");\n\n\t\t\t\tthis.activated = true;\n\t\t\t\tsetTimeout(() => this.activated = false, 100);\n\t\t\t},\n\n\n\t\t\trandomize () {\n\t\t\t\tthis.vector = this.vector.map(() => LatentCode.randn_bm());\n\t\t\t},\n\t\t},\n\t};\n</script>\n\n<style src=\"./common.css\"></style>\n<style scoped>\n\t.vector-input > *\n\t{\n\t\tvertical-align: middle;\n\t}\n</style>\n"]}, media: undefined });
+
+    };
+    /* scoped */
+    const __vue_scope_id__$1 = "data-v-7c3f941a";
+    /* module identifier */
+    const __vue_module_identifier__$1 = undefined;
+    /* functional template */
+    const __vue_is_functional_template__$1 = false;
+    /* style inject SSR */
+    
+
+    
+    var VectorInput = normalizeComponent_1(
+      { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
+      __vue_inject_styles__$1,
+      __vue_script__$1,
+      __vue_scope_id__$1,
+      __vue_is_functional_template__$1,
+      __vue_module_identifier__$1,
+      browser,
+      undefined
+    );
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+
+  var script$2 = {
+  	name: "store-input",
+
+
+  	props: {
+  		type: {
+  			type: String,
+  			default: "text",
+  		},
+
+  		value: {
+  			validator () {return true;},
+  		},
+
+  		range: Object,
+
+  		styleObj: Object,
+
+  		placeholder: String,
+
+  		localKey: String,
+  		sessionKey: String,
+
+  		disabled: Boolean,
+  	},
+
+
+  	computed: {
+  		innerValue: {
+  			get () {
+  				return this.value;
+  			},
+
+  			set (value) {
+  				this.$emit("input", value);
+  			},
+  		},
+  	},
+
+
+  	created () {
+  		this.load();
+  	},
+
+
+  	methods: {
+  		load () {
+  			if (this.localKey && localStorage[`storeInput-${this.localKey}`])
+  				this.innerValue = JSON.parse(localStorage[`storeInput-${this.localKey}`]);
+
+  			if (this.sessionKey && sessionStorage[`storeInput-${this.sessionKey}`])
+  				this.innerValue = JSON.parse(sessionStorage[`storeInput-${this.sessionKey}`]);
+  		},
+
+
+  		save () {
+  			if (this.localKey)
+  				localStorage[`storeInput-${this.localKey}`] = JSON.stringify(this.value);
+
+  			if (this.sessionKey)
+  				sessionStorage[`storeInput-${this.sessionKey}`] = JSON.stringify(this.value);
+  		},
+  	},
+
+
+  	watch: {
+  		value: "save",
+  	},
+  };
+
+  /* script */
+  const __vue_script__$2 = script$2;
+
+  /* template */
+  var __vue_render__$2 = function() {
     var _vm = this;
     var _h = _vm.$createElement;
     var _c = _vm._self._c || _h;
@@ -8706,1228 +8993,17 @@
       })
     ])
   };
-  var __vue_staticRenderFns__ = [];
-  __vue_render__._withStripped = true;
-
-    /* style */
-    const __vue_inject_styles__ = function (inject) {
-      if (!inject) return
-      inject("data-v-420a9766_0", { source: "\n.storeinput[data-v-420a9766]\n{\n\tposition: relative;\n}\n", map: {"version":3,"sources":["/home/jp/Documents/stylegan-web/app/storeinput.vue"],"names":[],"mappings":";AAwFA;;CAEA,kBAAA;AACA","file":"storeinput.vue","sourcesContent":["<template>\r\n\t<span class=\"storeinput\">\r\n\t\t<input\r\n\t\t\t:type=\"type\"\r\n\t\t\tv-model.lazy=\"innerValue\"\r\n\t\t\t:style=\"styleObj\"\r\n\t\t\t:placeholder=\"placeholder\"\r\n\t\t\t:min=\"range && range.min\"\r\n\t\t\t:max=\"range && range.max\"\r\n\t\t\t:step=\"range && range.step\"\r\n\t\t\t:disabled=\"disabled\"\r\n\t\t/>\r\n\t</span>\r\n</template>\r\n\r\n<script>\r\n\texport default {\r\n\t\tname: \"store-input\",\r\n\r\n\r\n\t\tprops: {\r\n\t\t\ttype: {\r\n\t\t\t\ttype: String,\r\n\t\t\t\tdefault: \"text\",\r\n\t\t\t},\r\n\r\n\t\t\tvalue: {\r\n\t\t\t\tvalidator () {return true;},\r\n\t\t\t},\r\n\r\n\t\t\trange: Object,\r\n\r\n\t\t\tstyleObj: Object,\r\n\r\n\t\t\tplaceholder: String,\r\n\r\n\t\t\tlocalKey: String,\r\n\t\t\tsessionKey: String,\r\n\r\n\t\t\tdisabled: Boolean,\r\n\t\t},\r\n\r\n\r\n\t\tcomputed: {\r\n\t\t\tinnerValue: {\r\n\t\t\t\tget () {\r\n\t\t\t\t\treturn this.value;\r\n\t\t\t\t},\r\n\r\n\t\t\t\tset (value) {\r\n\t\t\t\t\tthis.$emit(\"input\", value);\r\n\t\t\t\t},\r\n\t\t\t},\r\n\t\t},\r\n\r\n\r\n\t\tcreated () {\r\n\t\t\tthis.load();\r\n\t\t},\r\n\r\n\r\n\t\tmethods: {\r\n\t\t\tload () {\r\n\t\t\t\tif (this.localKey && localStorage[`storeInput-${this.localKey}`])\r\n\t\t\t\t\tthis.innerValue = JSON.parse(localStorage[`storeInput-${this.localKey}`]);\r\n\r\n\t\t\t\tif (this.sessionKey && sessionStorage[`storeInput-${this.sessionKey}`])\r\n\t\t\t\t\tthis.innerValue = JSON.parse(sessionStorage[`storeInput-${this.sessionKey}`]);\r\n\t\t\t},\r\n\r\n\r\n\t\t\tsave () {\r\n\t\t\t\tif (this.localKey)\r\n\t\t\t\t\tlocalStorage[`storeInput-${this.localKey}`] = JSON.stringify(this.value);\r\n\r\n\t\t\t\tif (this.sessionKey)\r\n\t\t\t\t\tsessionStorage[`storeInput-${this.sessionKey}`] = JSON.stringify(this.value);\r\n\t\t\t},\r\n\t\t},\r\n\r\n\r\n\t\twatch: {\r\n\t\t\tvalue: \"save\",\r\n\t\t},\r\n\t};\r\n</script>\r\n\r\n<style scoped>\r\n\t.storeinput\r\n\t{\r\n\t\tposition: relative;\r\n\t}\r\n</style>\r\n"]}, media: undefined });
-
-    };
-    /* scoped */
-    const __vue_scope_id__ = "data-v-420a9766";
-    /* module identifier */
-    const __vue_module_identifier__ = undefined;
-    /* functional template */
-    const __vue_is_functional_template__ = false;
-    /* style inject SSR */
-    
-
-    
-    var StoreInput = normalizeComponent_1(
-      { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
-      __vue_inject_styles__,
-      __vue_script__,
-      __vue_scope_id__,
-      __vue_is_functional_template__,
-      __vue_module_identifier__,
-      browser,
-      undefined
-    );
-
-  //
-  //
-  //
-  //
-  //
-  //
-
-  var script$1 = {
-  	name: "navigator",
-
-
-  	data() {
-  		return {
-  			links: [
-  				{
-  					href: "/",
-  					name: "EXPLORER",
-  				},
-  				{
-  					href: "/projector/",
-  					name: "PROJECTOR",
-  				},
-  				{
-  					href: "/merger/",
-  					name: "MERGER",
-  				},
-  			],
-  			pathname: location.pathname,
-  		};
-  	},
-  };
-
-  /* script */
-  const __vue_script__$1 = script$1;
-
-  /* template */
-  var __vue_render__$1 = function() {
-    var _vm = this;
-    var _h = _vm.$createElement;
-    var _c = _vm._self._c || _h;
-    return _c(
-      "header",
-      _vm._l(_vm.links, function(link) {
-        return _c(
-          "a",
-          {
-            class: { focus: link.href === _vm.pathname },
-            attrs: { href: link.href }
-          },
-          [_vm._v(_vm._s(link.name))]
-        )
-      }),
-      0
-    )
-  };
-  var __vue_staticRenderFns__$1 = [];
-  __vue_render__$1._withStripped = true;
-
-    /* style */
-    const __vue_inject_styles__$1 = function (inject) {
-      if (!inject) return
-      inject("data-v-072585b6_0", { source: "\nheader[data-v-072585b6]\n{\n\tposition: fixed;\n\tleft: 0;\n\ttop: 0;\n\tmargin: 0;\n\tpadding: 0 0.4em;\n\tfont-size: 10px;\n\theight: unset;\n\tcolor: white;\n\tbackground: #333;\n\tborder-bottom-right-radius: 1em;\n}\nheader > a[data-v-072585b6]\n{\n\tdisplay: inline-block;\n\tpadding: 0 1em;\n\tcolor: inherit;\n\ttext-decoration: none;\n\tborder-width: 2px;\n\tborder-color: transparent;\n}\nheader > a[data-v-072585b6]:hover\n{\n\tbackground: #c00;\n}\nheader > a.focus[data-v-072585b6]\n{\n\tborder-bottom: 2px solid white;\n\tfont-weight: bold;\n}\n", map: {"version":3,"sources":["/home/jp/Documents/stylegan-web/app/navigator.vue"],"names":[],"mappings":";AAkCA;;CAEA,eAAA;CACA,OAAA;CACA,MAAA;CACA,SAAA;CACA,gBAAA;CACA,eAAA;CACA,aAAA;CACA,YAAA;CACA,gBAAA;CACA,+BAAA;AACA;AAEA;;CAEA,qBAAA;CACA,cAAA;CACA,cAAA;CACA,qBAAA;CACA,iBAAA;CACA,yBAAA;AACA;AAEA;;CAEA,gBAAA;AACA;AAEA;;CAEA,8BAAA;CACA,iBAAA;AACA","file":"navigator.vue","sourcesContent":["<template>\n\t<header>\n\t\t<a v-for=\"link of links\" :href=\"link.href\" :class=\"{focus: link.href === pathname}\">{{link.name}}</a>\n\t</header>\n</template>\n\n<script>\n\texport default {\n\t\tname: \"navigator\",\n\n\n\t\tdata() {\n\t\t\treturn {\n\t\t\t\tlinks: [\n\t\t\t\t\t{\n\t\t\t\t\t\thref: \"/\",\n\t\t\t\t\t\tname: \"EXPLORER\",\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\thref: \"/projector/\",\n\t\t\t\t\t\tname: \"PROJECTOR\",\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\thref: \"/merger/\",\n\t\t\t\t\t\tname: \"MERGER\",\n\t\t\t\t\t},\n\t\t\t\t],\n\t\t\t\tpathname: location.pathname,\n\t\t\t};\n\t\t},\n\t};\n</script>\n\n<style scoped>\n\theader\n\t{\n\t\tposition: fixed;\n\t\tleft: 0;\n\t\ttop: 0;\n\t\tmargin: 0;\n\t\tpadding: 0 0.4em;\n\t\tfont-size: 10px;\n\t\theight: unset;\n\t\tcolor: white;\n\t\tbackground: #333;\n\t\tborder-bottom-right-radius: 1em;\n\t}\n\n\theader > a\n\t{\n\t\tdisplay: inline-block;\n\t\tpadding: 0 1em;\n\t\tcolor: inherit;\n\t\ttext-decoration: none;\n\t\tborder-width: 2px;\n\t\tborder-color: transparent;\n\t}\n\n\theader > a:hover\n\t{\n\t\tbackground: #c00;\n\t}\n\n\theader > a.focus\n\t{\n\t\tborder-bottom: 2px solid white;\n\t\tfont-weight: bold;\n\t}\n</style>\n"]}, media: undefined });
-
-    };
-    /* scoped */
-    const __vue_scope_id__$1 = "data-v-072585b6";
-    /* module identifier */
-    const __vue_module_identifier__$1 = undefined;
-    /* functional template */
-    const __vue_is_functional_template__$1 = false;
-    /* style inject SSR */
-    
-
-    
-    var Navigator = normalizeComponent_1(
-      { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
-      __vue_inject_styles__$1,
-      __vue_script__$1,
-      __vue_scope_id__$1,
-      __vue_is_functional_template__$1,
-      __vue_module_identifier__$1,
-      browser,
-      undefined
-    );
-
-  function randn_bm() {
-  	const u = 1 - Math.random();
-  	const v = 1 - Math.random();
-  	return Math.sqrt( -2 * Math.log( u ) ) * Math.cos( 2 * Math.PI * v );
-  }
-
-
-  function encodeFloat32 (vector) {
-  	return btoa(String.fromCharCode.apply(null, new Uint8Array(new Float32Array(vector).buffer)));
-  }
-
-
-  function decodeFloat32 (code) {
-  	const str = atob(decodeURIComponent(code));
-  	const uint8 = str.split("").map(c => c.charCodeAt(0));
-  	return new Float32Array(new Uint8Array(uint8).buffer);
-  }
-
-
-  function encodeFixed16 (vector) {
-  	return btoa(String.fromCharCode.apply(null, new Uint8Array(new Int16Array(vector.map(x => Math.floor(Math.min(Math.max(x, -32), 32 - 1e-9) * 1024))).buffer)));
-  }
-
-
-  function decodeFixed16 (code) {
-  	const str = atob(decodeURIComponent(code));
-  	const uint8 = str.split("").map(c => c.charCodeAt(0));
-  	const int16 = new Int16Array(new Uint8Array(uint8).buffer);
-  	return Array.from(int16).map(x => x / 1024);
-  }
-
-
-  function normalize$1(v) {
-  	const magnitude = Math.sqrt(v.reduce((s, x) => s + x * x, 0));
-
-  	return v.map(x => x / magnitude);
-  }
-
-
-  function angleBetween(v1, v2) {
-  	const nv1 = normalize$1(v1);
-  	const nv2 = normalize$1(v2);
-
-  	const dotProduct = nv1.reduce((sum, x, i) => sum + x * nv2[i], 0);
-
-  	return Math.acos(Math.max(Math.min(dotProduct, 1), -1));
-  }
-
-
-  function distanceBetween(v1, v2) {
-  	return Math.sqrt(v1.reduce((sum, x, i) => sum + (x - v2[i]) ** 2, 0));
-  }
-
-  //
-
-
-
-  function parseQueries (str) {
-  	return str.substr(1).split("&").reduce((dict, pair) => {
-  		const sections = pair.split("=");
-  		dict[sections[0]] = sections[1];
-
-  		return dict;
-  	}, {});
-  }
-
-
-  let featureNormalFactor = 0.6;
-
-
-  class Feature {
-  	constructor (value) {
-  		this.value = value;
-  	}
-
-
-  	get normalized () {
-  		return Math.tanh(this.value / featureNormalFactor);
-  	}
-
-
-  	set normalized (v) {
-  		this.value = Math.atanh(v) * featureNormalFactor;
-  	}
-
-
-  	randomize (intensity) {
-  		this.value += randn_bm() * intensity;
-  	}
-  }
-
-
-  var script$2 = {
-  	name: "index",
-
-
-  	components: {
-  		StoreInput,
-  		Navigator,
-  	},
-
-
-  	data () {
-  		return {
-  			selected:'',
-  			spec: null,
-  			latents_dimensions: null,
-  			latent_directions: null,
-  			latentsLayers: 0,
-  			features: null,
-  			featuresEx: null,
-  			psi: 0.5,
-  			initializing: false,
-  			loading: false,
-  			randomIntensity: -3,
-  			noise: true,
-  			fromW: false,
-  			hashLatents: null,
-  			slerpStep: 10,
-  			lerpFactor: 0.8,
-  			extendFeature: false,
-  			shownLayer: 0,
-  			copyActivated: false,
-  		};
-  	},
-
-
-  	computed: {
-  		useXLatents() {
-  			return this.fromW && this.extendFeature;
-  		},
-
-
-  		latentsBytes: {
-  			get () {
-  				if (!this.features)
-  					return null;
-
-  				return encodeFloat32(this.featureVector);
-  			},
-
-  			set (value) {
-  				const values = decodeFloat32(value);
-
-  				values.forEach((value, i) => {
-  					if (this.features && this.features[i])
-  						this.features[i].value = value;
-  				});
-  			},
-  		},
-
-
-  		latentsBytesEx: {
-  			get () {
-  				if (!this.featuresEx)
-  					return null;
-
-  				return encodeFixed16(this.featureVectorEx);
-  			},
-
-  			set (value) {
-  				const values = decodeFixed16(value);
-
-  				values.forEach((value, i) => {
-  					if (this.featuresEx && this.featuresEx[i])
-  						this.featuresEx[i].value = value;
-  				});
-  			},
-  		},
-
-
-  		latentsURL: {
-  			get () {
-  				if (!this.fromW)
-  					return `z:${this.psi},${this.latentsBytes}`;
-  				else if (!this.extendFeature)
-  					return `w:${this.latentsBytes}`;
-  				else
-  					return `w+:${this.latentsBytesEx}`;
-  			},
-
-  			set (value) {
-  				const [_, protocol, path] = value.match(/^([\w\+]+):(.+)$/);
-  				switch (protocol) {
-  				case "z":
-  					this.fromW = false;
-
-  					const [_, psi, bytes] = path.match(/^(.+),(.+)$/);
-  					this.psi = Number(this.psi);
-  					this.latentsBytes = bytes;
-
-  					break;
-  				case "w":
-  					this.fromW = true;
-  					this.extendFeature = false;
-
-  					this.latentsBytes = path;
-
-  					break;
-  				case "w+":
-  					this.fromW = true;
-  					this.extendFeature = true;
-  					
-  					this.latentsBytesEx = path;
-
-  					break;
-  				default:
-  					console.warn("latent URL set failed, unexpected protocol:", protocol);
-  				}
-  			},
-  		},
-
-  		
-  		shownFeatures () {
-  			if (!this.useXLatents)
-  				return this.features;
-
-  			return this.featuresEx.slice(this.shownLayer * this.latents_dimensions, (this.shownLayer + 1) * this.latents_dimensions);
-  		},
-
-
-  		featuresInUse () {
-  			return this.useXLatents ? this.featuresEx : this.features;
-  		},
-
-
-  		featureVector () {
-  			const normalized = this.fromW ? 1 : 1 / this.safeFeatureMagnitude;
-  			return this.features.map(f => f.value * normalized);
-  		},
-
-
-  		featureVectorEx () {
-  			return this.featuresEx && this.featuresEx.map(f => f.value);
-  		},
-
-
-  		featureMagnitude() {
-  			if (!this.features)
-  				return 0;
-
-  			const result = Math.sqrt(this.features.reduce((sum, f) => sum + f.value * f.value, 0));
-
-  			return result;
-  		},
-
-
-  		safeFeatureMagnitude() {
-  			const EPSILON = 1e-9;
-
-  			return this.featureMagnitude || EPSILON;
-  		},
-
-
-  		featureMagnitudeEx() {
-  			if (!this.featureVectorEx)
-  				return 0;
-
-  			const result = Math.sqrt(this.featureVectorEx.reduce((sum, v) => sum + v * v, 0));
-
-  			return result;
-  		},
-
-
-  		currentLatentsMagnitude () {
-  			return this.extendFeature ? this.featureMagnitudeEx / this.latentsLayers : this.featureMagnitude;
-  		},
-
-
-  		imageURL () {
-  			const latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;
-
-  			return `/generate?${this.fromW ? "fromW=1" : "psi=" + this.psi.toString()}${this.noise ? "&randomize_noise=1" : ""}&${latentStr}`;
-  		},
-
-
-  		tag () {
-  			const latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;
-
-  			return `#${this.fromW ? "fromW=1" : "psi=" + this.psi.toString()}&${latentStr}`;
-  		},
-
-
-  		latentDistance() {
-  			if (!this.hashLatents)
-  				return NaN;
-
-  			if (this.fromW)
-  				return distanceBetween(this.featureVector, this.hashLatents);
-  			else
-  				return angleBetween(this.featureVector, this.hashLatents);
-  		},
-
-  		asideScales() {
-  			return this.fromW ? [-10, 0, 10] : [-1, 0, 1];
-  		},
-  	},
-
-
-  	async mounted () {
-  		window.$main = this;
-
-  		this.initializing = true;
-  		const res = await fetch("/spec");
-  		this.spec = await res.json();
-  		console.log("model spec:", this.spec);
-
-  		this.latents_dimensions = this.spec.latents_dimensions;
-  		this.latent_directions = this.spec.latent_directions;
-  		// console.log("this.latent_directions:",this.latent_directions)
-
-  		this.latentsLayers = this.spec.synthesis_input_shape[1];
-  		// this should be the count of latent directions
-  		// this.latentDirection = Array(this.spec.latent_directions).fill().map(() => new Feature(0));
-  		// this.latentDirectionEx = Array(this.spec.latent_directions * this.spec.latent_directions.count).fill().map(() => new Feature(0));
-
-
-  		this.initializing = false;
-
-  		this.features = Array(this.spec.latents_dimensions).fill().map(() => new Feature(0));
-  		this.featuresEx = Array(this.spec.latents_dimensions * this.latentsLayers).fill().map(() => new Feature(0));
-
-  		window.onhashchange = () => this.loadHash();
-
-  		if (location.hash)
-  			this.loadHash();
-  	},
-
-
-  	methods: {
-  		randomizeFeatures() {
-  			if (this.shownFeatures)
-  				this.shownFeatures.forEach(f => f.randomize(Math.exp(this.randomIntensity)));
-  		},
-
-
-  		zeroFeatures() {
-  			if (this.featuresInUse)
-  				this.featuresInUse.forEach(f => f.value = 0);
-  		},
-
-
-  		loadHash () {
-  			const dict = parseQueries(location.hash);
-  			//console.log("dict:", dict);
-
-  			const psi = Number(dict.psi);
-  			if (Number.isFinite(psi))
-  				this.psi = psi;
-
-  			if (dict.xlatents) {
-  				this.latentsBytesEx = dict.xlatents;
-  				this.extendFeature = true;
-  			}
-  			else if (dict.latents) {
-  				this.latentsBytes = dict.latents;
-  				this.extendFeature = false;
-  			}
-
-  			this.fromW = dict.fromW ? true : false;
-
-  			this.updateHashLatents();
-  		},
-
-
-  		normalizeFeatures () {
-  			this.features.forEach(f => f.value /= this.safeFeatureMagnitude);
-  		},
-
-
-  		rotateFeatures (target, theta) {
-  			console.assert(target.length === this.features.length);
-
-  			this.normalizeFeatures();
-
-  			const dot = Math.min(1, Math.max(-1, target.reduce((sum, t, i) => sum + t * this.features[i].value, 0)));
-  			//console.assert(Math.abs(dot) <= 1, "unexpect dot:", dot, target);
-
-  			const sinOmega = Math.sqrt(1 - dot * dot);
-  			const sinTheta = Math.sin(theta);
-  			if (sinOmega < sinTheta) {
-  				this.features.forEach((f, i) => f.value = target[i]);
-  				return;
-  			}
-
-  			const side = target.map((t, i) => t - this.features[i].value * dot);
-  			const relative = side.map(v => v * sinTheta / sinOmega);
-
-  			const cosTheta = Math.cos(theta);
-  			this.features.forEach((f, i) => f.value = f.value * cosTheta + relative[i]);
-  		},
-
-
-  		slerpToHash () {
-  			const targetLatents = parseQueries(location.hash).latents;
-  			if (targetLatents) {
-  				this.rotateFeatures(this.hashLatents, this.slerpStep * Math.PI / 180);
-  			}
-  		},
-
-
-  		lerpToHash () {
-  			this.features.forEach((f, i) => f.value = f.value * this.lerpFactor + this.hashLatents[i] * (1 - this.lerpFactor));
-  		},
-
-
-  		updateHashLatents() {
-  			if (this.latentsBytes) {
-  				const lvec = decodeFloat32(this.latentsBytes);
-  				this.hashLatents = this.fromW ? lvec : normalize$1(lvec);
-  			}
-  			else
-  				this.hashLatents = null;
-  		},
-
-
-  		copyLatentCode() {
-  			navigator.clipboard.writeText(this.latentsURL);
-  			console.log("Latent code copied into clipboard.");
-
-  			this.copyActivated = true;
-  			setTimeout(() => this.copyActivated = false, 100);
-  		},
-
-
-  		async onPaste(event) {
-  			//console.log("onPaste:", [...event.clipboardData.items]);
-  			const text = await new Promise(resolve => [...event.clipboardData.items][0].getAsString(resolve));
-  			//console.log("text:", text);
-  			try {
-  				// check if text is valid latent code
-  				/*const origin = atob(text);
-  				if (origin.length !== this.latents_dimensions * 4)
-  					throw new Error("invalid latent code");*/
-  				if (!/^[\w+]+:.+$/.test(text))
-  					throw new Error("invalid latent code");
-
-  				this.latentsURL = text;
-  			}
-  			catch (error) {
-  				console.warn("latent code paste failed:", error);
-  			}
-  		},
-
-
-  		featureNormalFactor() {
-  			return featureNormalFactor;
-  		},
-
-
-  		async convertFromZToW () {
-  			this.latentsBytes = await (await fetch(`/map-z-w?psi=${this.psi}&z=${encodeURIComponent(this.latentsBytes)}`)).text();
-  			this.fromW = true;
-  			this.extendFeature = false;
-  		},
-  	},
-
-
-  	watch: {
-  		imageURL () {
-  			this.loading = true;
-  		},
-
-
-  		fromW (value) {
-  			featureNormalFactor = value ? 12 : 0.6;
-
-  			this.updateHashLatents();
-  		},
-
-
-  		/*extendFeature (value) {
-  			// set featuresEX value by tiling features' value
-  			if (value)
-  				this.featuresEx.forEach((feature, i) => feature.value = this.features[i % this.features.length].value);
-  		},*/
-  	},
-  };
-
-  /* script */
-  const __vue_script__$2 = script$2;
-
-  /* template */
-  var __vue_render__$2 = function() {
-    var _vm = this;
-    var _h = _vm.$createElement;
-    var _c = _vm._self._c || _h;
-    return _c(
-      "div",
-      {
-        on: {
-          paste: _vm.onPaste,
-          copy: function($event) {
-            $event.preventDefault();
-            return _vm.copyLatentCode($event)
-          }
-        }
-      },
-      [
-        _c("header", [
-          _vm.spec
-            ? _c("h2", { staticClass: "model", attrs: { title: "model name" } }, [
-                _vm._v("Model Name:" + _vm._s(_vm.spec.model))
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.selected,
-                  expression: "selected"
-                }
-              ],
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value;
-                      return val
-                    });
-                  _vm.selected = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0];
-                }
-              }
-            },
-            [
-              _c("option", { attrs: { disabled: "", value: "" } }, [
-                _vm._v("Please select one")
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.latent_directions, function(direction) {
-                return _c("option", { domProps: { value: direction } }, [
-                  _vm._v(_vm._s(direction))
-                ])
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("fieldset", [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.fromW,
-                    expression: "fromW"
-                  }
-                ],
-                staticClass: "latant-type",
-                attrs: { title: "generate from " + (_vm.fromW ? "W" : "Z") },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value;
-                        return val
-                      });
-                    _vm.fromW = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0];
-                  }
-                }
-              },
-              [
-                _c("option", { domProps: { value: false } }, [_vm._v("Z")]),
-                _vm._v(" "),
-                _c("option", { domProps: { value: true } }, [_vm._v("W")])
-              ]
-            ),
-            _vm._v(">\n\t\t")
-          ]),
-          _vm._v(" "),
-          !_vm.fromW
-            ? _c("fieldset", [
-                _c(
-                  "button",
-                  {
-                    attrs: { title: "map Z to W" },
-                    on: { click: _vm.convertFromZToW }
-                  },
-                  [_vm._v("→W")]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "fieldset",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !_vm.fromW,
-                  expression: "!fromW"
-                }
-              ]
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.noise,
-                    expression: "noise"
-                  }
-                ],
-                attrs: {
-                  type: "checkbox",
-                  title: "with random noise",
-                  disabled: _vm.fromW
-                },
-                domProps: {
-                  checked: Array.isArray(_vm.noise)
-                    ? _vm._i(_vm.noise, null) > -1
-                    : _vm.noise
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.noise,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false;
-                    if (Array.isArray($$a)) {
-                      var $$v = null,
-                        $$i = _vm._i($$a, $$v);
-                      if ($$el.checked) {
-                        $$i < 0 && (_vm.noise = $$a.concat([$$v]));
-                      } else {
-                        $$i > -1 &&
-                          (_vm.noise = $$a
-                            .slice(0, $$i)
-                            .concat($$a.slice($$i + 1)));
-                      }
-                    } else {
-                      _vm.noise = $$c;
-                    }
-                  }
-                }
-              }),
-              _vm._v("noise\n\t\t")
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "fieldset",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.fromW,
-                  expression: "fromW"
-                }
-              ]
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.extendFeature,
-                    expression: "extendFeature"
-                  }
-                ],
-                attrs: { type: "checkbox" },
-                domProps: {
-                  checked: Array.isArray(_vm.extendFeature)
-                    ? _vm._i(_vm.extendFeature, null) > -1
-                    : _vm.extendFeature
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.extendFeature,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false;
-                    if (Array.isArray($$a)) {
-                      var $$v = null,
-                        $$i = _vm._i($$a, $$v);
-                      if ($$el.checked) {
-                        $$i < 0 && (_vm.extendFeature = $$a.concat([$$v]));
-                      } else {
-                        $$i > -1 &&
-                          (_vm.extendFeature = $$a
-                            .slice(0, $$i)
-                            .concat($$a.slice($$i + 1)));
-                      }
-                    } else {
-                      _vm.extendFeature = $$c;
-                    }
-                  }
-                }
-              }),
-              _vm._v("extend\n\t\t")
-            ]
-          ),
-          _vm._v(" "),
-          _c("fieldset", [
-            _c(
-              "span",
-              {
-                attrs: {
-                  title: "Randomize intensity: " + Math.exp(_vm.randomIntensity)
-                }
-              },
-              [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model.number",
-                      value: _vm.randomIntensity,
-                      expression: "randomIntensity",
-                      modifiers: { number: true }
-                    }
-                  ],
-                  attrs: { type: "range", min: "-14", max: "2", step: "0.1" },
-                  domProps: { value: _vm.randomIntensity },
-                  on: {
-                    __r: function($event) {
-                      _vm.randomIntensity = _vm._n($event.target.value);
-                    },
-                    blur: function($event) {
-                      return _vm.$forceUpdate()
-                    }
-                  }
-                }),
-                _vm._v(
-                  "\n\t\t\t\t" +
-                    _vm._s(Math.exp(_vm.randomIntensity).toFixed(4)) +
-                    "\n\t\t\t"
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c("button", { on: { click: _vm.randomizeFeatures } }, [
-              _vm._v("Randomize")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("fieldset", [
-            _c("button", { on: { click: _vm.zeroFeatures } }, [_vm._v("Zero")])
-          ]),
-          _vm._v(" "),
-          _c("fieldset", [
-            _c("a", { attrs: { href: _vm.tag } }, [_vm._v("TAG")]),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                attrs: { title: "copy latent code" },
-                on: { click: _vm.copyLatentCode }
-              },
-              [_vm._v("⎘")]
-            )
-          ]),
-          _vm._v(" "),
-          _vm.hashLatents && !_vm.fromW
-            ? _c(
-                "fieldset",
-                [
-                  _c("em", { attrs: { title: _vm.latentDistance + " RAD" } }, [
-                    _vm._v(
-                      _vm._s(
-                        ((_vm.latentDistance * 180) / Math.PI).toPrecision(4)
-                      ) + "°"
-                    )
-                  ]),
-                  _vm._v("\n\t\t\t-"),
-                  _c("StoreInput", {
-                    attrs: {
-                      localKey: "explorerSlerpStep",
-                      styleObj: { width: "1.6em", border: 0 }
-                    },
-                    model: {
-                      value: _vm.slerpStep,
-                      callback: function($$v) {
-                        _vm.slerpStep = _vm._n($$v);
-                      },
-                      expression: "slerpStep"
-                    }
-                  }),
-                  _vm._v("°\n\t\t\t"),
-                  _c(
-                    "button",
-                    {
-                      attrs: {
-                        disabled: !_vm.latentDistance,
-                        title: "Slerp towards to hash tag"
-                      },
-                      on: { click: _vm.slerpToHash }
-                    },
-                    [_vm._v("Slerp")]
-                  )
-                ],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "fieldset",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !_vm.fromW,
-                  expression: "!fromW"
-                }
-              ],
-              class: { disabled: _vm.fromW }
-            },
-            [
-              _vm._v("Ψ:\n\t\t\t"),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model.number",
-                    value: _vm.psi,
-                    expression: "psi",
-                    modifiers: { number: true }
-                  }
-                ],
-                staticClass: "value",
-                attrs: { type: "number", step: "0.001", disabled: _vm.fromW },
-                domProps: { value: _vm.psi },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.psi = _vm._n($event.target.value);
-                  },
-                  blur: function($event) {
-                    return _vm.$forceUpdate()
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("span", { staticClass: "psi-bar" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: !_vm.fromW,
-                      expression: "!fromW"
-                    },
-                    {
-                      name: "model",
-                      rawName: "v-model.lazy",
-                      value: _vm.psi,
-                      expression: "psi",
-                      modifiers: { lazy: true }
-                    }
-                  ],
-                  attrs: { type: "range", min: -2, max: 2, step: "any" },
-                  domProps: { value: _vm.psi },
-                  on: {
-                    change: function($event) {
-                      _vm.psi = $event.target.value;
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "scales" }, [
-                  _c("span", { style: { left: "25%" } }, [
-                    _vm._v("\n\t\t\t\t\t\t▲"),
-                    _c("br"),
-                    _vm._v("-1\n\t\t\t\t\t")
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { style: { left: "50%" } }, [
-                    _vm._v("\n\t\t\t\t\t\t▲"),
-                    _c("br"),
-                    _vm._v("0\n\t\t\t\t\t")
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { style: { left: "75%" } }, [
-                    _vm._v("\n\t\t\t\t\t\t▲"),
-                    _c("br"),
-                    _vm._v("1\n\t\t\t\t\t")
-                  ])
-                ])
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "fieldset",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.fromW,
-                  expression: "fromW"
-                }
-              ]
-            },
-            [
-              _vm._v("\n\t\t\tMagnitude: "),
-              _c("em", { attrs: { title: _vm.currentLatentsMagnitude } }, [
-                _vm._v(_vm._s(_vm.currentLatentsMagnitude.toFixed(3)))
-              ])
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("aside", [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.useXLatents,
-                  expression: "useXLatents"
-                },
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.shownLayer,
-                  expression: "shownLayer"
-                }
-              ],
-              staticClass: "layer",
-              attrs: { title: "layer index" },
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value;
-                      return val
-                    });
-                  _vm.shownLayer = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0];
-                }
-              }
-            },
-            _vm._l(_vm.latentsLayers, function(index) {
-              return _c(
-                "option",
-                { key: index, domProps: { value: index - 1 } },
-                [_vm._v(_vm._s(index - 1))]
-              )
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _c("p", [
-            _c(
-              "span",
-              { staticClass: "scales" },
-              _vm._l(_vm.asideScales, function(scale) {
-                return _c(
-                  "span",
-                  {
-                    key: scale,
-                    style: {
-                      left:
-                        (Math.tanh(scale / _vm.featureNormalFactor()) + 1) * 50 +
-                        "%"
-                    }
-                  },
-                  [_vm._v("\n\t\t\t\t\t" + _vm._s(scale)), _c("br"), _vm._v(" ▾")]
-                )
-              }),
-              0
-            )
-          ]),
-          _vm._v(" "),
-          _vm.shownFeatures
-            ? _c(
-                "ol",
-                _vm._l(_vm.shownFeatures, function(feature, index) {
-                  return _c("li", { key: index }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model.lazy",
-                          value: feature.normalized,
-                          expression: "feature.normalized",
-                          modifiers: { lazy: true }
-                        }
-                      ],
-                      staticClass: "feature-bar",
-                      attrs: {
-                        type: "range",
-                        min: -0.99999999,
-                        max: 0.99999999,
-                        step: "any"
-                      },
-                      domProps: { value: feature.normalized },
-                      on: {
-                        change: function($event) {
-                          return _vm.$set(
-                            feature,
-                            "normalized",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model.number",
-                          value: feature.value,
-                          expression: "feature.value",
-                          modifiers: { number: true }
-                        }
-                      ],
-                      staticClass: "value",
-                      attrs: { type: "number", step: "0.001" },
-                      domProps: { value: feature.value },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(feature, "value", _vm._n($event.target.value));
-                        },
-                        blur: function($event) {
-                          return _vm.$forceUpdate()
-                        }
-                      }
-                    })
-                  ])
-                }),
-                0
-              )
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c("article", { class: { loading: _vm.loading } }, [
-          _vm.latentsBytes
-            ? _c("img", {
-                staticClass: "result note-box",
-                class: { activated: _vm.copyActivated },
-                attrs: { src: _vm.imageURL },
-                on: {
-                  load: function($event) {
-                    _vm.loading = false;
-                  }
-                }
-              })
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.initializing,
-                expression: "initializing"
-              }
-            ],
-            staticClass: "initializing"
-          },
-          [_vm._v("Model initializing, wait a moment...")]
-        ),
-        _vm._v(" "),
-        _c("Navigator")
-      ],
-      1
-    )
-  };
   var __vue_staticRenderFns__$2 = [];
   __vue_render__$2._withStripped = true;
 
     /* style */
     const __vue_inject_styles__$2 = function (inject) {
       if (!inject) return
-      inject("data-v-465e129a_0", { source: "\nhtml\n{\n\toverflow: hidden;\n\tfont-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}\nheader fieldset\n{\n\tdisplay: inline-block;\n\tmargin: 0 .6em;\n\tborder: 0;\n\tpadding: 0;\n}\n.initializing\n{\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\tbottom: 0;\n\tright: 0;\n\tfont-size: 10vh;\n\tpadding: 30vh 2em 0;\n\twhite-space: normal;\n\tbackground-color: #ccca;\n\tcolor: #444c;\n}\n.note-box\n{\n\ttransition: outline-color .6s ease-out;\n\toutline: 4px transparent solid;\n}\n.note-box.activated\n{\n\toutline-color: #0f6;\n\ttransition: outline-color .01s;\n}\nbutton.icon\n{\n\tbackground: transparent;\n\tborder: 0;\n\tcursor: pointer;\n}\nbutton.icon:hover\n{\n\ttransform: scale(1.1);\n}\n", map: undefined, media: undefined })
-  ,inject("data-v-465e129a_1", { source: "\nhtml\n{\n\toverflow: hidden;\n\tfont-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}\nheader fieldset\n{\n\tdisplay: inline-block;\n\tmargin: 0 .6em;\n\tborder: 0;\n\tpadding: 0;\n}\n.initializing\n{\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\tbottom: 0;\n\tright: 0;\n\tfont-size: 10vh;\n\tpadding: 30vh 2em 0;\n\twhite-space: normal;\n\tbackground-color: #ccca;\n\tcolor: #444c;\n}\n.note-box\n{\n\ttransition: outline-color .6s ease-out;\n\toutline: 4px transparent solid;\n}\n.note-box.activated\n{\n\toutline-color: #0f6;\n\ttransition: outline-color .01s;\n}\nbutton.icon\n{\n\tbackground: transparent;\n\tborder: 0;\n\tcursor: pointer;\n}\nbutton.icon:hover\n{\n\ttransform: scale(1.1);\n}\n", map: undefined, media: undefined })
-  ,inject("data-v-465e129a_2", { source: "\nbody\n{\n\twhite-space: nowrap;\n}\nheader\n{\n\theight: 2em;\n\tmargin: 20px 0;\n}\nheader h2\n{\n\tdisplay: inline;\n}\n.latant-type\n{\n\tborder: 0;\n\tfont-weight: bold;\n\t-webkit-appearance: none;\n\tcursor: pointer;\n}\n\n/*.latant-type:hover\n{\n\t-webkit-appearance: menulist;\n}*/\naside, article\n{\n\tdisplay: inline-block;\n\tvertical-align: top;\n\theight: calc(100vh - 72px);\n}\naside\n{\n\toverflow-y: auto;\n\tfont-size: 9px;\n}\naside > *\n{\n\tpadding-left: 3em;\n}\naside .layer\n{\n\tposition: absolute;\n\ttop: 54px;\n\tleft: 1em;\n\tpadding-left: 0;\n}\n.disabled\n{\n\tcolor: #0006;\n}\n.feature-bar, aside .scales\n{\n\twidth: 240px;\n}\n.model\n{\n\tfont-size: 20px;\n\tfont-weight: bold;\n\tmargin: 0 1em;\n}\n.result\n{\n\theight: 100%;\n\twidth: auto;\n}\n.value\n{\n\tborder: 0;\n\twidth: 4.1em;\n}\n.loading img\n{\n\topacity: 0.7;\n}\n.scales > span\n{\n\tposition: absolute;\n\ttext-align: center;\n\ttransform: translateX(-50%);\n\tpointer-events: none;\n}\n.psi-bar\n{\n\tdisplay: inline-block;\n\twidth: 600px;\n\tposition: relative;\n}\n.psi-bar input\n{\n\twidth: 100%;\n}\n.psi-bar .scales > span\n{\n\tfont-size: 9px;\n\tbottom: -8px;\n\tcolor: #ccc;\n}\naside .scales\n{\n\tposition: absolute;\n\tdisplay: inline-block;\n\theight: 2em;\n\tpointer-events: none;\n\tmargin: 0;\n\ttransform: translateY(-3em);\n\tcolor: #ccc;\n}\n\n/*.scales .line\n{\n\ttransform: scale(1000);\n}*/\n", map: {"version":3,"sources":["/home/jp/Documents/stylegan-web/app/index.vue"],"names":[],"mappings":";AAshBA;;CAEA,mBAAA;AACA;AAEA;;CAEA,WAAA;CACA,cAAA;AACA;AAEA;;CAEA,eAAA;AACA;AAEA;;CAEA,SAAA;CACA,iBAAA;CACA,wBAAA;CACA,eAAA;AACA;;AAEA;;;EAGA;AAEA;;CAEA,qBAAA;CACA,mBAAA;CACA,0BAAA;AACA;AAEA;;CAEA,gBAAA;CACA,cAAA;AACA;AAEA;;CAEA,iBAAA;AACA;AAEA;;CAEA,kBAAA;CACA,SAAA;CACA,SAAA;CACA,eAAA;AACA;AAEA;;CAEA,YAAA;AACA;AAEA;;CAEA,YAAA;AACA;AAEA;;CAEA,eAAA;CACA,iBAAA;CACA,aAAA;AACA;AAEA;;CAEA,YAAA;CACA,WAAA;AACA;AAEA;;CAEA,SAAA;CACA,YAAA;AACA;AAEA;;CAEA,YAAA;AACA;AAEA;;CAEA,kBAAA;CACA,kBAAA;CACA,2BAAA;CACA,oBAAA;AACA;AAEA;;CAEA,qBAAA;CACA,YAAA;CACA,kBAAA;AACA;AAEA;;CAEA,WAAA;AACA;AAEA;;CAEA,cAAA;CACA,YAAA;CACA,WAAA;AACA;AAEA;;CAEA,kBAAA;CACA,qBAAA;CACA,WAAA;CACA,oBAAA;CACA,SAAA;CACA,2BAAA;CACA,WAAA;AACA;;AAEA;;;EAGA","file":"index.vue","sourcesContent":["<template>\n\t<div @paste=\"onPaste\" @copy.prevent=\"copyLatentCode\">\n\t\t<header>\n\t\t\t<h2 v-if=\"spec\" class=\"model\" title=\"model name\">Model Name:{{spec.model}}</h2>\n\t\t\t<select v-model=\"selected\">\n\t\t\t\t<option disabled value=\"\">Please select one</option>\n\t\t\t\t<option v-for=\"direction in latent_directions\" :value=\"direction\">{{direction}}</option>\n\t\t\t</select>\n\t\t\t<fieldset>\n\t\t\t\t<select v-model=\"fromW\" class=\"latant-type\" :title=\"`generate from ${fromW ? 'W' : 'Z'}`\">\n\t\t\t\t\t<option :value=\"false\">Z</option>\n\t\t\t\t\t<option :value=\"true\">W</option>\n\t\t\t\t</select>&gt;\n\t\t\t</fieldset>\n\t\t\t<fieldset v-if=\"!fromW\">\n\t\t\t\t<button @click=\"convertFromZToW\" title=\"map Z to W\">&#x2192;W</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset v-show=\"!fromW\">\n\t\t\t\t<input type=\"checkbox\" v-model=\"noise\" title=\"with random noise\" :disabled=\"fromW\" />noise\n\t\t\t</fieldset>\n\t\t\t<fieldset v-show=\"fromW\">\n\t\t\t\t<input type=\"checkbox\" v-model=\"extendFeature\" />extend\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<span :title=\"`Randomize intensity: ${Math.exp(randomIntensity)}`\">\n\t\t\t\t\t<input type=\"range\" min=\"-14\" max=\"2\" step=\"0.1\" v-model.number=\"randomIntensity\" />\n\t\t\t\t\t{{Math.exp(randomIntensity).toFixed(4)}}\n\t\t\t\t</span>\n\t\t\t\t<button @click=\"randomizeFeatures\">Randomize</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<button @click=\"zeroFeatures\">Zero</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<a :href=\"tag\">TAG</a>\n\t\t\t\t<button @click=\"copyLatentCode\" title=\"copy latent code\">&#x2398;</button>\n\t\t\t</fieldset>\n\t\t\t<fieldset v-if=\"hashLatents && !fromW\">\n\t\t\t\t<em :title=\"`${latentDistance} RAD`\">{{(latentDistance * 180 / Math.PI).toPrecision(4)}}&deg;</em>\n\t\t\t\t-<StoreInput v-model.number=\"slerpStep\" localKey=\"explorerSlerpStep\" :styleObj=\"{width: '1.6em', border: 0}\" />&deg;\n\t\t\t\t<button @click=\"slerpToHash\" :disabled=\"!latentDistance\" title=\"Slerp towards to hash tag\">Slerp</button>\n\t\t\t</fieldset>\n\t\t\t<!--fieldset v-if=\"hashLatents && fromW\">\n\t\t\t\t<em :title=\"`${latentDistance}`\">{{latentDistance.toPrecision(4)}}</em>\n\t\t\t\t&times;<StoreInput v-model.number=\"lerpFactor\" localKey=\"explorerLerpStep\" :styleObj=\"{width: '2em', border: 0}\" />\n\t\t\t\t<button @click=\"lerpToHash\" title=\"Lerp towards to hash tag\">Lerp</button>\n\t\t\t</fieldset-->\n\t\t\t<fieldset v-show=\"!fromW\" :class=\"{disabled: fromW}\">\n\t\t\t\t<!--&Psi; not work?-->&#x03a8;:\n\t\t\t\t<input class=\"value\" type=\"number\" v-model.number=\"psi\" step=\"0.001\" :disabled=\"fromW\" />\n\t\t\t\t<span class=\"psi-bar\">\n\t\t\t\t\t<input v-show=\"!fromW\" type=\"range\" v-model.lazy=\"psi\" :min=\"-2\" :max=\"2\" step=\"any\" />\n\t\t\t\t\t<span class=\"scales\">\n\t\t\t\t\t\t<span :style=\"{left: '25%'}\">\n\t\t\t\t\t\t\t&#x25b2;<br/>-1\n\t\t\t\t\t\t</span>\n\t\t\t\t\t\t<span :style=\"{left: '50%'}\">\n\t\t\t\t\t\t\t&#x25b2;<br/>0\n\t\t\t\t\t\t</span>\n\t\t\t\t\t\t<span :style=\"{left: '75%'}\">\n\t\t\t\t\t\t\t&#x25b2;<br/>1\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</span>\n\t\t\t\t</span>\n\t\t\t</fieldset>\n\t\t\t<fieldset v-show=\"fromW\">\n\t\t\t\tMagnitude: <em :title=\"currentLatentsMagnitude\">{{currentLatentsMagnitude.toFixed(3)}}</em>\n\t\t\t</fieldset>\n\t\t</header>\n\t\t<aside>\n\t\t\t\n\t\t\t<select v-show=\"useXLatents\" class=\"layer\" v-model=\"shownLayer\" title=\"layer index\">\n\t\t\t\t<option v-for=\"index of latentsLayers\" :key=\"index\" :value=\"index - 1\">{{index - 1}}</option>\n\t\t\t</select>\n\t\t\t<p>\n\t\t\t\t<span class=\"scales\">\n\t\t\t\t\t<span v-for=\"scale of asideScales\" :key=\"scale\" :style=\"{left: `${(Math.tanh(scale / featureNormalFactor()) + 1) * 50}%`}\">\n\t\t\t\t\t\t{{scale}}<br/> &#x25be;<!--span class=\"line\">&#xff5c;</span-->\n\t\t\t\t\t</span>\n\t\t\t\t</span>\n\t\t\t</p>\n\n\t\t\t<ol v-if=\"shownFeatures\">\n\t\t\t\t<li v-for=\"(feature, index) of shownFeatures\" :key=\"index\">\n\t\t\t\t\t<input type=\"range\" class=\"feature-bar\" v-model.lazy=\"feature.normalized\" :min=\"-0.99999999\" :max=\"0.99999999\" step=\"any\" />\n\t\t\t\t\t<input class=\"value\" type=\"number\" v-model.number=\"feature.value\" step=\"0.001\" />\n\t\t\t\t</li>\n\t\t\t</ol>\n\n\t\t</aside>\n\t\t<article :class=\"{loading}\">\n\t\t\t<img v-if=\"latentsBytes\" class=\"result note-box\" :class=\"{activated: copyActivated}\" :src=\"imageURL\" @load=\"loading = false\" />\n\t\t</article>\n\t\t<div v-show=\"initializing\" class=\"initializing\">Model initializing, wait a moment...</div>\n\t\t<Navigator />\n\t</div>\n</template>\n\n<style src=\"./common.css\"></style>\n\n<script>\n\timport StoreInput from \"./storeinput.vue\";\n\timport Navigator from \"./navigator.vue\";\n\n\timport * as LatentCode from \"./latentCode.js\"\n\n\n\n\tfunction parseQueries (str) {\n\t\treturn str.substr(1).split(\"&\").reduce((dict, pair) => {\n\t\t\tconst sections = pair.split(\"=\");\n\t\t\tdict[sections[0]] = sections[1];\n\n\t\t\treturn dict;\n\t\t}, {});\n\t}\n\n\n\tlet featureNormalFactor = 0.6;\n\n\n\tclass Feature {\n\t\tconstructor (value) {\n\t\t\tthis.value = value;\n\t\t}\n\n\n\t\tget normalized () {\n\t\t\treturn Math.tanh(this.value / featureNormalFactor);\n\t\t}\n\n\n\t\tset normalized (v) {\n\t\t\tthis.value = Math.atanh(v) * featureNormalFactor;\n\t\t}\n\n\n\t\trandomize (intensity) {\n\t\t\tthis.value += LatentCode.randn_bm() * intensity;\n\t\t}\n\t};\n\n\n\n\texport default {\n\t\tname: \"index\",\n\n\n\t\tcomponents: {\n\t\t\tStoreInput,\n\t\t\tNavigator,\n\t\t},\n\n\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\tselected:'',\n\t\t\t\tspec: null,\n\t\t\t\tlatents_dimensions: null,\n\t\t\t\tlatent_directions: null,\n\t\t\t\tlatentsLayers: 0,\n\t\t\t\tfeatures: null,\n\t\t\t\tfeaturesEx: null,\n\t\t\t\tpsi: 0.5,\n\t\t\t\tinitializing: false,\n\t\t\t\tloading: false,\n\t\t\t\trandomIntensity: -3,\n\t\t\t\tnoise: true,\n\t\t\t\tfromW: false,\n\t\t\t\thashLatents: null,\n\t\t\t\tslerpStep: 10,\n\t\t\t\tlerpFactor: 0.8,\n\t\t\t\textendFeature: false,\n\t\t\t\tshownLayer: 0,\n\t\t\t\tcopyActivated: false,\n\t\t\t};\n\t\t},\n\n\n\t\tcomputed: {\n\t\t\tuseXLatents() {\n\t\t\t\treturn this.fromW && this.extendFeature;\n\t\t\t},\n\n\n\t\t\tlatentsBytes: {\n\t\t\t\tget () {\n\t\t\t\t\tif (!this.features)\n\t\t\t\t\t\treturn null;\n\n\t\t\t\t\treturn LatentCode.encodeFloat32(this.featureVector);\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tconst values = LatentCode.decodeFloat32(value);\n\n\t\t\t\t\tvalues.forEach((value, i) => {\n\t\t\t\t\t\tif (this.features && this.features[i])\n\t\t\t\t\t\t\tthis.features[i].value = value;\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t},\n\n\n\t\t\tlatentsBytesEx: {\n\t\t\t\tget () {\n\t\t\t\t\tif (!this.featuresEx)\n\t\t\t\t\t\treturn null;\n\n\t\t\t\t\treturn LatentCode.encodeFixed16(this.featureVectorEx);\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tconst values = LatentCode.decodeFixed16(value);\n\n\t\t\t\t\tvalues.forEach((value, i) => {\n\t\t\t\t\t\tif (this.featuresEx && this.featuresEx[i])\n\t\t\t\t\t\t\tthis.featuresEx[i].value = value;\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t},\n\n\n\t\t\tlatentsURL: {\n\t\t\t\tget () {\n\t\t\t\t\tif (!this.fromW)\n\t\t\t\t\t\treturn `z:${this.psi},${this.latentsBytes}`;\n\t\t\t\t\telse if (!this.extendFeature)\n\t\t\t\t\t\treturn `w:${this.latentsBytes}`;\n\t\t\t\t\telse\n\t\t\t\t\t\treturn `w+:${this.latentsBytesEx}`;\n\t\t\t\t},\n\n\t\t\t\tset (value) {\n\t\t\t\t\tconst [_, protocol, path] = value.match(/^([\\w\\+]+):(.+)$/);\n\t\t\t\t\tswitch (protocol) {\n\t\t\t\t\tcase \"z\":\n\t\t\t\t\t\tthis.fromW = false;\n\n\t\t\t\t\t\tconst [_, psi, bytes] = path.match(/^(.+),(.+)$/);\n\t\t\t\t\t\tthis.psi = Number(this.psi);\n\t\t\t\t\t\tthis.latentsBytes = bytes;\n\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tcase \"w\":\n\t\t\t\t\t\tthis.fromW = true;\n\t\t\t\t\t\tthis.extendFeature = false;\n\n\t\t\t\t\t\tthis.latentsBytes = path;\n\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tcase \"w+\":\n\t\t\t\t\t\tthis.fromW = true;\n\t\t\t\t\t\tthis.extendFeature = true;\n\t\t\t\t\t\t\n\t\t\t\t\t\tthis.latentsBytesEx = path;\n\n\t\t\t\t\t\tbreak;\n\t\t\t\t\tdefault:\n\t\t\t\t\t\tconsole.warn(\"latent URL set failed, unexpected protocol:\", protocol);\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t},\n\n\t\t\t\n\t\t\tshownFeatures () {\n\t\t\t\tif (!this.useXLatents)\n\t\t\t\t\treturn this.features;\n\n\t\t\t\treturn this.featuresEx.slice(this.shownLayer * this.latents_dimensions, (this.shownLayer + 1) * this.latents_dimensions);\n\t\t\t},\n\n\n\t\t\tfeaturesInUse () {\n\t\t\t\treturn this.useXLatents ? this.featuresEx : this.features;\n\t\t\t},\n\n\n\t\t\tfeatureVector () {\n\t\t\t\tconst normalized = this.fromW ? 1 : 1 / this.safeFeatureMagnitude;\n\t\t\t\treturn this.features.map(f => f.value * normalized);\n\t\t\t},\n\n\n\t\t\tfeatureVectorEx () {\n\t\t\t\treturn this.featuresEx && this.featuresEx.map(f => f.value);\n\t\t\t},\n\n\n\t\t\tfeatureMagnitude() {\n\t\t\t\tif (!this.features)\n\t\t\t\t\treturn 0;\n\n\t\t\t\tconst result = Math.sqrt(this.features.reduce((sum, f) => sum + f.value * f.value, 0));\n\n\t\t\t\treturn result;\n\t\t\t},\n\n\n\t\t\tsafeFeatureMagnitude() {\n\t\t\t\tconst EPSILON = 1e-9;\n\n\t\t\t\treturn this.featureMagnitude || EPSILON;\n\t\t\t},\n\n\n\t\t\tfeatureMagnitudeEx() {\n\t\t\t\tif (!this.featureVectorEx)\n\t\t\t\t\treturn 0;\n\n\t\t\t\tconst result = Math.sqrt(this.featureVectorEx.reduce((sum, v) => sum + v * v, 0));\n\n\t\t\t\treturn result;\n\t\t\t},\n\n\n\t\t\tcurrentLatentsMagnitude () {\n\t\t\t\treturn this.extendFeature ? this.featureMagnitudeEx / this.latentsLayers : this.featureMagnitude;\n\t\t\t},\n\n\n\t\t\timageURL () {\n\t\t\t\tconst latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;\n\n\t\t\t\treturn `/generate?${this.fromW ? \"fromW=1\" : \"psi=\" + this.psi.toString()}${this.noise ? \"&randomize_noise=1\" : \"\"}&${latentStr}`;\n\t\t\t},\n\n\n\t\t\ttag () {\n\t\t\t\tconst latentStr = this.useXLatents ? `xlatents=${encodeURIComponent(this.latentsBytesEx)}` : `latents=${encodeURIComponent(this.latentsBytes)}`;\n\n\t\t\t\treturn `#${this.fromW ? \"fromW=1\" : \"psi=\" + this.psi.toString()}&${latentStr}`;\n\t\t\t},\n\n\n\t\t\tlatentDistance() {\n\t\t\t\tif (!this.hashLatents)\n\t\t\t\t\treturn NaN;\n\n\t\t\t\tif (this.fromW)\n\t\t\t\t\treturn LatentCode.distanceBetween(this.featureVector, this.hashLatents);\n\t\t\t\telse\n\t\t\t\t\treturn LatentCode.angleBetween(this.featureVector, this.hashLatents);\n\t\t\t},\n\n\t\t\tasideScales() {\n\t\t\t\treturn this.fromW ? [-10, 0, 10] : [-1, 0, 1];\n\t\t\t},\n\t\t},\n\n\n\t\tasync mounted () {\n\t\t\twindow.$main = this;\n\n\t\t\tthis.initializing = true;\n\t\t\tconst res = await fetch(\"/spec\");\n\t\t\tthis.spec = await res.json();\n\t\t\tconsole.log(\"model spec:\", this.spec);\n\n\t\t\tthis.latents_dimensions = this.spec.latents_dimensions;\n\t\t\tthis.latent_directions = this.spec.latent_directions;\n\t\t\t// console.log(\"this.latent_directions:\",this.latent_directions)\n\n\t\t\tthis.latentsLayers = this.spec.synthesis_input_shape[1];\n\t\t\t// this should be the count of latent directions\n\t\t\t// this.latentDirection = Array(this.spec.latent_directions).fill().map(() => new Feature(0));\n\t\t\t// this.latentDirectionEx = Array(this.spec.latent_directions * this.spec.latent_directions.count).fill().map(() => new Feature(0));\n\n\n\t\t\tthis.initializing = false;\n\n\t\t\tthis.features = Array(this.spec.latents_dimensions).fill().map(() => new Feature(0));\n\t\t\tthis.featuresEx = Array(this.spec.latents_dimensions * this.latentsLayers).fill().map(() => new Feature(0));\n\n\t\t\twindow.onhashchange = () => this.loadHash();\n\n\t\t\tif (location.hash)\n\t\t\t\tthis.loadHash();\n\t\t},\n\n\n\t\tmethods: {\n\t\t\trandomizeFeatures() {\n\t\t\t\tif (this.shownFeatures)\n\t\t\t\t\tthis.shownFeatures.forEach(f => f.randomize(Math.exp(this.randomIntensity)));\n\t\t\t},\n\n\n\t\t\tzeroFeatures() {\n\t\t\t\tif (this.featuresInUse)\n\t\t\t\t\tthis.featuresInUse.forEach(f => f.value = 0);\n\t\t\t},\n\n\n\t\t\tloadHash () {\n\t\t\t\tconst dict = parseQueries(location.hash);\n\t\t\t\t//console.log(\"dict:\", dict);\n\n\t\t\t\tconst psi = Number(dict.psi);\n\t\t\t\tif (Number.isFinite(psi))\n\t\t\t\t\tthis.psi = psi;\n\n\t\t\t\tif (dict.xlatents) {\n\t\t\t\t\tthis.latentsBytesEx = dict.xlatents;\n\t\t\t\t\tthis.extendFeature = true;\n\t\t\t\t}\n\t\t\t\telse if (dict.latents) {\n\t\t\t\t\tthis.latentsBytes = dict.latents;\n\t\t\t\t\tthis.extendFeature = false;\n\t\t\t\t}\n\n\t\t\t\tthis.fromW = dict.fromW ? true : false;\n\n\t\t\t\tthis.updateHashLatents();\n\t\t\t},\n\n\n\t\t\tnormalizeFeatures () {\n\t\t\t\tthis.features.forEach(f => f.value /= this.safeFeatureMagnitude);\n\t\t\t},\n\n\n\t\t\trotateFeatures (target, theta) {\n\t\t\t\tconsole.assert(target.length === this.features.length);\n\n\t\t\t\tthis.normalizeFeatures();\n\n\t\t\t\tconst dot = Math.min(1, Math.max(-1, target.reduce((sum, t, i) => sum + t * this.features[i].value, 0)));\n\t\t\t\t//console.assert(Math.abs(dot) <= 1, \"unexpect dot:\", dot, target);\n\n\t\t\t\tconst sinOmega = Math.sqrt(1 - dot * dot);\n\t\t\t\tconst sinTheta = Math.sin(theta);\n\t\t\t\tif (sinOmega < sinTheta) {\n\t\t\t\t\tthis.features.forEach((f, i) => f.value = target[i]);\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\tconst side = target.map((t, i) => t - this.features[i].value * dot);\n\t\t\t\tconst relative = side.map(v => v * sinTheta / sinOmega);\n\n\t\t\t\tconst cosTheta = Math.cos(theta);\n\t\t\t\tthis.features.forEach((f, i) => f.value = f.value * cosTheta + relative[i]);\n\t\t\t},\n\n\n\t\t\tslerpToHash () {\n\t\t\t\tconst targetLatents = parseQueries(location.hash).latents;\n\t\t\t\tif (targetLatents) {\n\t\t\t\t\tthis.rotateFeatures(this.hashLatents, this.slerpStep * Math.PI / 180);\n\t\t\t\t}\n\t\t\t},\n\n\n\t\t\tlerpToHash () {\n\t\t\t\tthis.features.forEach((f, i) => f.value = f.value * this.lerpFactor + this.hashLatents[i] * (1 - this.lerpFactor));\n\t\t\t},\n\n\n\t\t\tupdateHashLatents() {\n\t\t\t\tif (this.latentsBytes) {\n\t\t\t\t\tconst lvec = LatentCode.decodeFloat32(this.latentsBytes);\n\t\t\t\t\tthis.hashLatents = this.fromW ? lvec : LatentCode.normalize(lvec);\n\t\t\t\t}\n\t\t\t\telse\n\t\t\t\t\tthis.hashLatents = null;\n\t\t\t},\n\n\n\t\t\tcopyLatentCode() {\n\t\t\t\tnavigator.clipboard.writeText(this.latentsURL);\n\t\t\t\tconsole.log(\"Latent code copied into clipboard.\");\n\n\t\t\t\tthis.copyActivated = true;\n\t\t\t\tsetTimeout(() => this.copyActivated = false, 100);\n\t\t\t},\n\n\n\t\t\tasync onPaste(event) {\n\t\t\t\t//console.log(\"onPaste:\", [...event.clipboardData.items]);\n\t\t\t\tconst text = await new Promise(resolve => [...event.clipboardData.items][0].getAsString(resolve));\n\t\t\t\t//console.log(\"text:\", text);\n\t\t\t\ttry {\n\t\t\t\t\t// check if text is valid latent code\n\t\t\t\t\t/*const origin = atob(text);\n\t\t\t\t\tif (origin.length !== this.latents_dimensions * 4)\n\t\t\t\t\t\tthrow new Error(\"invalid latent code\");*/\n\t\t\t\t\tif (!/^[\\w+]+:.+$/.test(text))\n\t\t\t\t\t\tthrow new Error(\"invalid latent code\");\n\n\t\t\t\t\tthis.latentsURL = text;\n\t\t\t\t}\n\t\t\t\tcatch (error) {\n\t\t\t\t\tconsole.warn(\"latent code paste failed:\", error);\n\t\t\t\t}\n\t\t\t},\n\n\n\t\t\tfeatureNormalFactor() {\n\t\t\t\treturn featureNormalFactor;\n\t\t\t},\n\n\n\t\t\tasync convertFromZToW () {\n\t\t\t\tthis.latentsBytes = await (await fetch(`/map-z-w?psi=${this.psi}&z=${encodeURIComponent(this.latentsBytes)}`)).text();\n\t\t\t\tthis.fromW = true;\n\t\t\t\tthis.extendFeature = false;\n\t\t\t},\n\t\t},\n\n\n\t\twatch: {\n\t\t\timageURL () {\n\t\t\t\tthis.loading = true;\n\t\t\t},\n\n\n\t\t\tfromW (value) {\n\t\t\t\tfeatureNormalFactor = value ? 12 : 0.6;\n\n\t\t\t\tthis.updateHashLatents();\n\t\t\t},\n\n\n\t\t\t/*extendFeature (value) {\n\t\t\t\t// set featuresEX value by tiling features' value\n\t\t\t\tif (value)\n\t\t\t\t\tthis.featuresEx.forEach((feature, i) => feature.value = this.features[i % this.features.length].value);\n\t\t\t},*/\n\t\t},\n\t};\n</script>\n\n<style src=\"./common.css\"></style>\n<style>\n\tbody\n\t{\n\t\twhite-space: nowrap;\n\t}\n\n\theader\n\t{\n\t\theight: 2em;\n\t\tmargin: 20px 0;\n\t}\n\n\theader h2\n\t{\n\t\tdisplay: inline;\n\t}\n\n\t.latant-type\n\t{\n\t\tborder: 0;\n\t\tfont-weight: bold;\n\t\t-webkit-appearance: none;\n\t\tcursor: pointer;\n\t}\n\n\t/*.latant-type:hover\n\t{\n\t\t-webkit-appearance: menulist;\n\t}*/\n\n\taside, article\n\t{\n\t\tdisplay: inline-block;\n\t\tvertical-align: top;\n\t\theight: calc(100vh - 72px);\n\t}\n\n\taside\n\t{\n\t\toverflow-y: auto;\n\t\tfont-size: 9px;\n\t}\n\n\taside > *\n\t{\n\t\tpadding-left: 3em;\n\t}\n\n\taside .layer\n\t{\n\t\tposition: absolute;\n\t\ttop: 54px;\n\t\tleft: 1em;\n\t\tpadding-left: 0;\n\t}\n\n\t.disabled\n\t{\n\t\tcolor: #0006;\n\t}\n\n\t.feature-bar, aside .scales\n\t{\n\t\twidth: 240px;\n\t}\n\n\t.model\n\t{\n\t\tfont-size: 20px;\n\t\tfont-weight: bold;\n\t\tmargin: 0 1em;\n\t}\n\n\t.result\n\t{\n\t\theight: 100%;\n\t\twidth: auto;\n\t}\n\n\t.value\n\t{\n\t\tborder: 0;\n\t\twidth: 4.1em;\n\t}\n\n\t.loading img\n\t{\n\t\topacity: 0.7;\n\t}\n\n\t.scales > span\n\t{\n\t\tposition: absolute;\n\t\ttext-align: center;\n\t\ttransform: translateX(-50%);\n\t\tpointer-events: none;\n\t}\n\n\t.psi-bar\n\t{\n\t\tdisplay: inline-block;\n\t\twidth: 600px;\n\t\tposition: relative;\n\t}\n\n\t.psi-bar input\n\t{\n\t\twidth: 100%;\n\t}\n\n\t.psi-bar .scales > span\n\t{\n\t\tfont-size: 9px;\n\t\tbottom: -8px;\n\t\tcolor: #ccc;\n\t}\n\n\taside .scales\n\t{\n\t\tposition: absolute;\n\t\tdisplay: inline-block;\n\t\theight: 2em;\n\t\tpointer-events: none;\n\t\tmargin: 0;\n\t\ttransform: translateY(-3em);\n\t\tcolor: #ccc;\n\t}\n\n\t/*.scales .line\n\t{\n\t\ttransform: scale(1000);\n\t}*/\n</style>\n"]}, media: undefined });
+      inject("data-v-420a9766_0", { source: "\n.storeinput[data-v-420a9766]\n{\n\tposition: relative;\n}\n", map: {"version":3,"sources":["/home/jp/Documents/stylegan-web/app/storeinput.vue"],"names":[],"mappings":";AAwFA;;CAEA,kBAAA;AACA","file":"storeinput.vue","sourcesContent":["<template>\r\n\t<span class=\"storeinput\">\r\n\t\t<input\r\n\t\t\t:type=\"type\"\r\n\t\t\tv-model.lazy=\"innerValue\"\r\n\t\t\t:style=\"styleObj\"\r\n\t\t\t:placeholder=\"placeholder\"\r\n\t\t\t:min=\"range && range.min\"\r\n\t\t\t:max=\"range && range.max\"\r\n\t\t\t:step=\"range && range.step\"\r\n\t\t\t:disabled=\"disabled\"\r\n\t\t/>\r\n\t</span>\r\n</template>\r\n\r\n<script>\r\n\texport default {\r\n\t\tname: \"store-input\",\r\n\r\n\r\n\t\tprops: {\r\n\t\t\ttype: {\r\n\t\t\t\ttype: String,\r\n\t\t\t\tdefault: \"text\",\r\n\t\t\t},\r\n\r\n\t\t\tvalue: {\r\n\t\t\t\tvalidator () {return true;},\r\n\t\t\t},\r\n\r\n\t\t\trange: Object,\r\n\r\n\t\t\tstyleObj: Object,\r\n\r\n\t\t\tplaceholder: String,\r\n\r\n\t\t\tlocalKey: String,\r\n\t\t\tsessionKey: String,\r\n\r\n\t\t\tdisabled: Boolean,\r\n\t\t},\r\n\r\n\r\n\t\tcomputed: {\r\n\t\t\tinnerValue: {\r\n\t\t\t\tget () {\r\n\t\t\t\t\treturn this.value;\r\n\t\t\t\t},\r\n\r\n\t\t\t\tset (value) {\r\n\t\t\t\t\tthis.$emit(\"input\", value);\r\n\t\t\t\t},\r\n\t\t\t},\r\n\t\t},\r\n\r\n\r\n\t\tcreated () {\r\n\t\t\tthis.load();\r\n\t\t},\r\n\r\n\r\n\t\tmethods: {\r\n\t\t\tload () {\r\n\t\t\t\tif (this.localKey && localStorage[`storeInput-${this.localKey}`])\r\n\t\t\t\t\tthis.innerValue = JSON.parse(localStorage[`storeInput-${this.localKey}`]);\r\n\r\n\t\t\t\tif (this.sessionKey && sessionStorage[`storeInput-${this.sessionKey}`])\r\n\t\t\t\t\tthis.innerValue = JSON.parse(sessionStorage[`storeInput-${this.sessionKey}`]);\r\n\t\t\t},\r\n\r\n\r\n\t\t\tsave () {\r\n\t\t\t\tif (this.localKey)\r\n\t\t\t\t\tlocalStorage[`storeInput-${this.localKey}`] = JSON.stringify(this.value);\r\n\r\n\t\t\t\tif (this.sessionKey)\r\n\t\t\t\t\tsessionStorage[`storeInput-${this.sessionKey}`] = JSON.stringify(this.value);\r\n\t\t\t},\r\n\t\t},\r\n\r\n\r\n\t\twatch: {\r\n\t\t\tvalue: \"save\",\r\n\t\t},\r\n\t};\r\n</script>\r\n\r\n<style scoped>\r\n\t.storeinput\r\n\t{\r\n\t\tposition: relative;\r\n\t}\r\n</style>\r\n"]}, media: undefined });
 
     };
     /* scoped */
-    const __vue_scope_id__$2 = undefined;
+    const __vue_scope_id__$2 = "data-v-420a9766";
     /* module identifier */
     const __vue_module_identifier__$2 = undefined;
     /* functional template */
@@ -9936,7 +9012,7 @@
     
 
     
-    var App = normalizeComponent_1(
+    var StoreInput = normalizeComponent_1(
       { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
       __vue_inject_styles__$2,
       __vue_script__$2,
@@ -9947,10 +9023,266 @@
       undefined
     );
 
-  Vue.component("v-select", vSelect);
+  const downloadUrl = (url, filename) => {
+  	const a = document.createElement("a");
+  	a.setAttribute("download", filename);
+  	a.href = url;
+  	a.click();
+  };
+
+  //
+
+
+
+  const normalizeVector = vec => {
+  	const magnitude = Math.max(Math.sqrt(vec.reduce(((sum, v) => sum + v * v), 0)), 1e-9);
+
+  	return vec.map(v => v / magnitude);
+  };
+
+  const rotateVector = (source, target, theta) => {
+  	console.assert(source.length === target.length);
+
+  	const dot = Math.min(1, Math.max(-1, target.reduce((sum, t, i) => sum + t * source[i], 0)));
+  	//console.assert(Math.abs(dot) <= 1, "unexpect dot:", dot, target);
+
+  	const sinOmega = Math.sqrt(1 - dot * dot);
+  	const sinTheta = Math.sin(theta);
+
+  	const side = target.map((t, i) => t - source[i] * dot);
+  	const relative = side.map(v => v * sinTheta / sinOmega);
+
+  	const cosTheta = Math.cos(theta);
+
+  	return {
+  		side,
+  		result: source.map((v, i) => v * cosTheta + relative[i]),
+  	};
+  };
+
+  const circleSamplePoints = (start, target, steps) => {
+  	let s = normalizeVector(start);
+  	let t = normalizeVector(target);
+
+  	const circle = [];
+
+  	const stepAngle = Math.PI * 2 / steps;
+
+  	for (let i = 0; i < steps; ++i) {
+  		const {side, result} = rotateVector(s, t, stepAngle);
+  		circle.push(result);
+
+  		s = normalizeVector(result);
+  		t = normalizeVector(side);
+  	}
+
+  	return circle;
+  };
+
+
+
+  var script$3 = {
+  	name: "mappingViewer",
+
+
+  	components: {
+  		CirclePlot,
+  		VectorInput,
+  		StoreInput,
+  	},
+
+  	
+  	data () {
+  		return {
+  			circlePointCount: 360,
+  			wCenter: null,
+  			wCircle: null,
+  		};
+  	},
+
+
+  	async created () {
+  		window.$main = this;
+
+  		this.wCenter = await this.mapZtoW(new Float32Array(512), 0);
+  	},
+
+
+  	methods: {
+  		async mapZtoW (z, psi = 1) {
+  			const zCode = encodeFloat32(z);
+  			const wCode = await (await fetch(`/map-z-w?psi=${psi}&z=${encodeURIComponent(zCode)}`)).text();
+
+  			return decodeFloat32(wCode);
+  		},
+
+
+  		async plot () {
+  			const zs = circleSamplePoints(this.$refs.source.vector, this.$refs.target.vector, this.circlePointCount);
+  			//console.log("zs:", zs);
+
+  			const ws = [];
+  			for (const z of zs) {
+  				ws.push(await this.mapZtoW(z));
+  			}
+  			//console.log("ws:", ws);
+
+  			this.wCircle = ws;
+  		},
+
+
+  		downloadSourceData () {
+  			const blob = new Blob([this.wCenter, ...this.wCircle]);
+  			downloadUrl(URL.createObjectURL(blob), "mappingSource.dat");
+  		},
+
+
+  		downloadSourceDataTSV () {
+  			const points = this.wCircle.map(point => point.map((x, i) => x - this.wCenter[i]));
+  			//console.log("points:", points);
+
+  			const text = points.map(point => Array.from(point).join("\t")).join("\n");
+  			const blob = new Blob([text]);
+  			downloadUrl(URL.createObjectURL(blob), "mappingSource.tsv");
+  		},
+
+
+  		async downloadResultImages ({interval = 1, resolution = 256} = {}) {
+  			this.$refs.canvas.width = resolution;
+  			this.$refs.canvas.height = resolution;
+  			const ctx = this.$refs.canvas.getContext("2d");
+
+  			for (const [i, w] of this.wCircle.entries()) {
+  				if (i % interval)
+  					continue;
+
+  				const response = await fetch(`/generate?fromW=1&latents=${encodeURIComponent(encodeFloat32(w))}`);
+  				const blob = await response.blob();
+  				//downloadUrl(URL.createObjectURL(blob), `${i}.png`);
+
+  				const img = new Image();
+  				await new Promise(resolve => {
+  					img.onload = resolve;
+  					img.src = URL.createObjectURL(blob);
+  				});
+  				ctx.drawImage(img, 0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+  				const compressedBlob = await new Promise(resolve => this.$refs.canvas.toBlob(resolve, "image/webp"));
+
+  				downloadUrl(URL.createObjectURL(compressedBlob), `${i}.webp`);
+  			}
+  		},
+  	},
+  };
+
+  /* script */
+  const __vue_script__$3 = script$3;
+
+  /* template */
+  var __vue_render__$3 = function() {
+    var _vm = this;
+    var _h = _vm.$createElement;
+    var _c = _vm._self._c || _h;
+    return _c("div", [
+      _c("header", [
+        _c(
+          "fieldset",
+          { staticClass: "vectors" },
+          [
+            _c("VectorInput", { ref: "source" }),
+            _vm._v(" "),
+            _c("span", { staticClass: "separator" }, [_vm._v("→")]),
+            _vm._v(" "),
+            _c("VectorInput", { ref: "target" })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "fieldset",
+          [
+            _c("StoreInput", {
+              attrs: {
+                type: "number",
+                range: { min: 2 },
+                localKey: "mappingViewerCirclePointCount",
+                title: "point count",
+                styleObj: { width: "3em" }
+              },
+              model: {
+                value: _vm.circlePointCount,
+                callback: function($$v) {
+                  _vm.circlePointCount = _vm._n($$v);
+                },
+                expression: "circlePointCount"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("fieldset", [
+          _c("button", { on: { click: _vm.plot } }, [_vm._v("plot")])
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "main",
+        [
+          _vm.wCircle
+            ? _c("CirclePlot", {
+                attrs: { center: _vm.wCenter, circle: _vm.wCircle }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _c("canvas", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: false,
+                expression: "false"
+              }
+            ],
+            ref: "canvas"
+          })
+        ],
+        1
+      )
+    ])
+  };
+  var __vue_staticRenderFns__$3 = [];
+  __vue_render__$3._withStripped = true;
+
+    /* style */
+    const __vue_inject_styles__$3 = function (inject) {
+      if (!inject) return
+      inject("data-v-287db568_0", { source: "\nhtml\n{\n\toverflow: hidden;\n\tfont-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n}\nheader fieldset\n{\n\tdisplay: inline-block;\n\tmargin: 0 .6em;\n\tborder: 0;\n\tpadding: 0;\n}\n.initializing\n{\n\tposition: fixed;\n\ttop: 0;\n\tleft: 0;\n\tbottom: 0;\n\tright: 0;\n\tfont-size: 10vh;\n\tpadding: 30vh 2em 0;\n\twhite-space: normal;\n\tbackground-color: #ccca;\n\tcolor: #444c;\n}\n.note-box\n{\n\ttransition: outline-color .6s ease-out;\n\toutline: 4px transparent solid;\n}\n.note-box.activated\n{\n\toutline-color: #0f6;\n\ttransition: outline-color .01s;\n}\nbutton.icon\n{\n\tbackground: transparent;\n\tborder: 0;\n\tcursor: pointer;\n}\nbutton.icon:hover\n{\n\ttransform: scale(1.1);\n}\n", map: undefined, media: undefined })
+  ,inject("data-v-287db568_1", { source: "\nheader .vectors, header .vectors > *\n{\n\tvertical-align: middle;\n}\nspan.separator\n{\n\tdisplay: inline-block;\n\tmargin: 0 1em;\n}\n", map: {"version":3,"sources":["/home/jp/Documents/stylegan-web/app/mappingViewer.vue"],"names":[],"mappings":";AAoLA;;CAEA,sBAAA;AACA;AAEA;;CAEA,qBAAA;CACA,aAAA;AACA","file":"mappingViewer.vue","sourcesContent":["<template>\n\t<div>\n\t\t<header>\n\t\t\t<fieldset class=\"vectors\">\n\t\t\t\t<VectorInput ref=\"source\" /> <span class=\"separator\">&#x2192;</span> <VectorInput ref=\"target\" />\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<StoreInput\n\t\t\t\t\ttype=\"number\"\n\t\t\t\t\tv-model.number=\"circlePointCount\"\n\t\t\t\t\t:range=\"{min: 2}\"\n\t\t\t\t\tlocalKey=\"mappingViewerCirclePointCount\"\n\t\t\t\t\ttitle=\"point count\"\n\t\t\t\t\t:styleObj=\"{width: '3em'}\"\n\t\t\t\t/>\n\t\t\t</fieldset>\n\t\t\t<fieldset>\n\t\t\t\t<button @click=\"plot\">plot</button>\n\t\t\t</fieldset>\n\t\t</header>\n\t\t<main>\n\t\t\t<CirclePlot v-if=\"wCircle\" :center=\"wCenter\" :circle=\"wCircle\" />\n\t\t\t<canvas ref=\"canvas\" v-show=\"false\" />\n\t\t</main>\n\t</div>\n</template>\n\n<style src=\"./common.css\"></style>\n<script>\n\timport CirclePlot from \"./circlePlot.vue\";\n\timport VectorInput from \"./vectorInput.vue\";\n\timport StoreInput from \"./storeinput.vue\";\n\n\timport * as LatentCode from \"./latentCode.js\"\n\timport {downloadUrl} from \"./utils.js\";\n\n\n\n\tconst normalizeVector = vec => {\n\t\tconst magnitude = Math.max(Math.sqrt(vec.reduce(((sum, v) => sum + v * v), 0)), 1e-9);\n\n\t\treturn vec.map(v => v / magnitude);\n\t};\n\n\tconst rotateVector = (source, target, theta) => {\n\t\tconsole.assert(source.length === target.length);\n\n\t\tconst dot = Math.min(1, Math.max(-1, target.reduce((sum, t, i) => sum + t * source[i], 0)));\n\t\t//console.assert(Math.abs(dot) <= 1, \"unexpect dot:\", dot, target);\n\n\t\tconst sinOmega = Math.sqrt(1 - dot * dot);\n\t\tconst sinTheta = Math.sin(theta);\n\n\t\tconst side = target.map((t, i) => t - source[i] * dot);\n\t\tconst relative = side.map(v => v * sinTheta / sinOmega);\n\n\t\tconst cosTheta = Math.cos(theta);\n\n\t\treturn {\n\t\t\tside,\n\t\t\tresult: source.map((v, i) => v * cosTheta + relative[i]),\n\t\t};\n\t};\n\n\tconst circleSamplePoints = (start, target, steps) => {\n\t\tlet s = normalizeVector(start);\n\t\tlet t = normalizeVector(target);\n\n\t\tconst circle = [];\n\n\t\tconst stepAngle = Math.PI * 2 / steps;\n\n\t\tfor (let i = 0; i < steps; ++i) {\n\t\t\tconst {side, result} = rotateVector(s, t, stepAngle);\n\t\t\tcircle.push(result);\n\n\t\t\ts = normalizeVector(result);\n\t\t\tt = normalizeVector(side);\n\t\t}\n\n\t\treturn circle;\n\t};\n\n\n\n\texport default {\n\t\tname: \"mappingViewer\",\n\n\n\t\tcomponents: {\n\t\t\tCirclePlot,\n\t\t\tVectorInput,\n\t\t\tStoreInput,\n\t\t},\n\n\t\t\n\t\tdata () {\n\t\t\treturn {\n\t\t\t\tcirclePointCount: 360,\n\t\t\t\twCenter: null,\n\t\t\t\twCircle: null,\n\t\t\t};\n\t\t},\n\n\n\t\tasync created () {\n\t\t\twindow.$main = this;\n\n\t\t\tthis.wCenter = await this.mapZtoW(new Float32Array(512), 0);\n\t\t},\n\n\n\t\tmethods: {\n\t\t\tasync mapZtoW (z, psi = 1) {\n\t\t\t\tconst zCode = LatentCode.encodeFloat32(z);\n\t\t\t\tconst wCode = await (await fetch(`/map-z-w?psi=${psi}&z=${encodeURIComponent(zCode)}`)).text();\n\n\t\t\t\treturn LatentCode.decodeFloat32(wCode);\n\t\t\t},\n\n\n\t\t\tasync plot () {\n\t\t\t\tconst zs = circleSamplePoints(this.$refs.source.vector, this.$refs.target.vector, this.circlePointCount);\n\t\t\t\t//console.log(\"zs:\", zs);\n\n\t\t\t\tconst ws = [];\n\t\t\t\tfor (const z of zs) {\n\t\t\t\t\tws.push(await this.mapZtoW(z));\n\t\t\t\t}\n\t\t\t\t//console.log(\"ws:\", ws);\n\n\t\t\t\tthis.wCircle = ws;\n\t\t\t},\n\n\n\t\t\tdownloadSourceData () {\n\t\t\t\tconst blob = new Blob([this.wCenter, ...this.wCircle]);\n\t\t\t\tdownloadUrl(URL.createObjectURL(blob), \"mappingSource.dat\");\n\t\t\t},\n\n\n\t\t\tdownloadSourceDataTSV () {\n\t\t\t\tconst points = this.wCircle.map(point => point.map((x, i) => x - this.wCenter[i]));\n\t\t\t\t//console.log(\"points:\", points);\n\n\t\t\t\tconst text = points.map(point => Array.from(point).join(\"\\t\")).join(\"\\n\");\n\t\t\t\tconst blob = new Blob([text]);\n\t\t\t\tdownloadUrl(URL.createObjectURL(blob), \"mappingSource.tsv\");\n\t\t\t},\n\n\n\t\t\tasync downloadResultImages ({interval = 1, resolution = 256} = {}) {\n\t\t\t\tthis.$refs.canvas.width = resolution;\n\t\t\t\tthis.$refs.canvas.height = resolution;\n\t\t\t\tconst ctx = this.$refs.canvas.getContext(\"2d\");\n\n\t\t\t\tfor (const [i, w] of this.wCircle.entries()) {\n\t\t\t\t\tif (i % interval)\n\t\t\t\t\t\tcontinue;\n\n\t\t\t\t\tconst response = await fetch(`/generate?fromW=1&latents=${encodeURIComponent(LatentCode.encodeFloat32(w))}`);\n\t\t\t\t\tconst blob = await response.blob();\n\t\t\t\t\t//downloadUrl(URL.createObjectURL(blob), `${i}.png`);\n\n\t\t\t\t\tconst img = new Image();\n\t\t\t\t\tawait new Promise(resolve => {\n\t\t\t\t\t\timg.onload = resolve;\n\t\t\t\t\t\timg.src = URL.createObjectURL(blob);\n\t\t\t\t\t});\n\t\t\t\t\tctx.drawImage(img, 0, 0, this.$refs.canvas.width, this.$refs.canvas.height);\n\t\t\t\t\tconst compressedBlob = await new Promise(resolve => this.$refs.canvas.toBlob(resolve, \"image/webp\"));\n\n\t\t\t\t\tdownloadUrl(URL.createObjectURL(compressedBlob), `${i}.webp`);\n\t\t\t\t}\n\t\t\t},\n\t\t},\n\t};\n</script>\n\n<style>\n\theader .vectors, header .vectors > *\n\t{\n\t\tvertical-align: middle;\n\t}\n\n\tspan.separator\n\t{\n\t\tdisplay: inline-block;\n\t\tmargin: 0 1em;\n\t}\n</style>\n"]}, media: undefined });
+
+    };
+    /* scoped */
+    const __vue_scope_id__$3 = undefined;
+    /* module identifier */
+    const __vue_module_identifier__$3 = undefined;
+    /* functional template */
+    const __vue_is_functional_template__$3 = false;
+    /* style inject SSR */
+    
+
+    
+    var App = normalizeComponent_1(
+      { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
+      __vue_inject_styles__$3,
+      __vue_script__$3,
+      __vue_scope_id__$3,
+      __vue_is_functional_template__$3,
+      __vue_module_identifier__$3,
+      browser,
+      undefined
+    );
 
   new Vue({
   	render: h => h(App),
-  }).$mount("#index");
+  }).$mount("#viewer");
 
 }());

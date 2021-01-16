@@ -1,9 +1,9 @@
 
 import Vue from "vue";
-
+import vSelect from "vue-select";
 import App from "./index.vue";
 
-// Vue.component('slim-select', require('./Components/SlimSelectComponent.vue'));
+Vue.component("v-select", vSelect);
 
 new Vue({
 	render: h => h(App),

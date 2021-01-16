@@ -26,6 +26,7 @@
 		"vue-template-compiler": "^2.6.8"
 	},
 	"dependencies": {
-		"slim-select": "^1.27.0"
+		"slim-select": "^1.27.0",
+		"vue-select": "^3.11.2"
 	}
 }
