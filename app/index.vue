@@ -3,6 +3,9 @@
 		<header>
 			<h2 v-if="spec" class="model" title="model name">{{spec.model}}</h2>
 			<fieldset>
+                <v-select label="title" v-model="selected" :options="latents_directions"></v-select>
+            </fieldset>
+			<fieldset>
 				<select v-model="fromW" class="latant-type" :title="`generate from ${fromW ? 'W' : 'Z'}`">
 					<option :value="false">Z</option>
 					<option :value="true">W</option>
@@ -64,6 +67,7 @@
 			</fieldset>
 		</header>
 		<aside>
+			
 			<select v-show="useXLatents" class="layer" v-model="shownLayer" title="layer index">
 				<option v-for="index of latentsLayers" :key="index" :value="index - 1">{{index - 1}}</option>
 			</select>
@@ -154,6 +158,7 @@
 
 		data () {
 			return {
+				selected:'',
 				spec: null,
 				latents_dimensions: null,
 				latents_directions: null,
@@ -263,7 +268,7 @@
 
 			shownLatentDirections () {
 				return this.latentDirectionEx.slice(this.shownLayer * this.latents_directions, (this.shownLayer + 1) * this.latents_directions);
-			}
+			},
 
 			shownFeatures () {
 				if (!this.useXLatents)
