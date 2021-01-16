@@ -39,11 +39,20 @@ def get_files_with_ext(path, extensions):
     files = [f for f in files if os.path.isfile(f)]
     files = [f for f in files if f.endswith(tuple(extensions))]
     return files
-	
+
 def get_latent_vector_files():
     files = get_files_with_ext('latent_directions', '.npy')
-    # latent_vectors = [np.load(f) for f in files]
+    latent_vectors = [np.load(f) for f in files]
     return files
+
+
+def loadLatentDirection(modelName):
+	files = get_files_with_ext('latent_directions', '.npy')
+	latent_vectors = [np.load(f) for f in files]
+	print("latent_vectors:",latent_vectors)
+	print("TODO - add logic here :",modelName)
+
+
 
 def loadGs():
 	with g_LoadingMutex:
@@ -158,6 +167,13 @@ for path in pageRouters:
 
 	app.route(path, endpoint = 'handler' + path)(getHandler(pageRouters[path]))
 
+# /change?direction=smile
+@app.route('/change', methods=['GET'])
+def directions():
+	directionsStr = flask.request.args.get('direction')
+	print("directionsStr:",directionsStr)
+	loadLatentDirection(directionsStr)
+	return {"status":directionsStr}
 
 
 @app.route('/spec', methods=['GET'])
