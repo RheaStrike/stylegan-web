@@ -381,8 +381,11 @@
 
 
 		methods: {
-
-			
+ 			async onChange(event) {
+           	 	console.log(event.target.value)
+				var test = await (await fetch(`/change?direction=${this.selectedDirection}`)).text();
+				console.log("test:",test)
+       		},
 			randomizeFeatures() {
 				if (this.shownFeatures)
 					this.shownFeatures.forEach(f => f.randomize(Math.exp(this.randomIntensity)));
@@ -507,15 +510,8 @@
 				this.latentsBytes = await (await fetch(`/map-z-w?psi=${this.psi}&z=${encodeURIComponent(this.latentsBytes)}`)).text();
 				this.fromW = true;
 				this.extendFeature = false;
-			},
- 			onChange(event) {
-           	 	console.log(event.target.value)
-				switchLatentDirections()
-       		},
-			async switchLatentDirections () {
-				test = await (await fetch(`/change?direction=${this.selectedDirection}`)).text();
-				console.log("test:",test)
-			},
+			}
+			
 		},
 
 
