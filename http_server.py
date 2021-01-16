@@ -42,11 +42,11 @@ def get_files_with_ext(path, extensions):
 
 def get_latent_vector_files():
     files = get_files_with_ext('latent_directions', '.npy')
-    latent_vectors = [np.load(f) for f in files]
+    # latent_vectors = [np.load(f) for f in files]
     return files
 
 
-def loadLatentDirection(modelName):
+def load_latent_direction(modelName):
 	files = get_files_with_ext('latent_directions', '.npy')
 	latent_vectors = [np.load(f) for f in files]
 	print("latent_vectors:",latent_vectors)
@@ -172,7 +172,7 @@ for path in pageRouters:
 def directions():
 	directionsStr = flask.request.args.get('direction')
 	print("directionsStr:",directionsStr)
-	loadLatentDirection(directionsStr)
+	load_latent_direction(directionsStr)
 	return {"status":directionsStr}
 
 
